@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Menù online – Sagra del Sedano 2026 · Alluvioni Cambiò</title>
-<meta name="description" content="Scegli i piatti della 46ª Sagra del Sedano e genera il QR dell'ordine da mostrare in cassa.">
+<meta name="description" content="Scegli i piatti della 45ª Sagra del Sedano e genera il QR dell'ordine da mostrare in cassa.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow+Condensed:wght@400;600;800&display=swap">
@@ -16,12 +16,13 @@ body{margin:0;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)
 .display{font-family:"Alfa Slab One",Georgia,serif;font-weight:400}
 header{position:relative;max-width:56rem;margin:0 auto;padding:2.5rem 1rem 1.5rem;text-align:center}
 .kicker{font-size:.9rem;font-weight:800;text-transform:uppercase;letter-spacing:.25em;color:var(--mut);margin:0}
-h1{font-size:clamp(3.5rem,14vw,6rem);line-height:.88;color:var(--pri);margin:.5rem 0 0}
+h1{font-size:clamp(2.5rem,9.8vw,6rem);line-height:.88;color:var(--pri);margin:.5rem 0 0}
 h1 small{font-size:.4em}
 .sub{font-size:1.8rem;color:var(--pri);margin:.5rem 0 0}
 h2.menu{font-size:2.6rem;color:var(--pri);margin:1.2rem 0 0}
-.star{position:absolute;right:.5rem;top:.8rem;width:4.5rem;height:4.5rem;background:var(--pri);color:var(--pri-fg);display:flex;flex-direction:column;align-items:center;justify-content:center;clip-path:polygon(50% 0%,61% 12%,75% 6%,78% 22%,94% 25%,88% 40%,100% 50%,88% 60%,94% 75%,78% 78%,75% 94%,61% 88%,50% 100%,39% 88%,25% 94%,22% 78%,6% 75%,12% 60%,0% 50%,12% 40%,6% 25%,22% 22%,25% 6%,39% 12%)}
-.star b{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:1.4rem;line-height:1}.star span{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.titlewrap{position:relative;display:inline-block}
+.star{position:absolute;right:100%;top:50%;margin-right:1%;width:38%;aspect-ratio:1;container-type:inline-size;background:var(--pri);color:var(--pri-fg);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:translateY(-50%) rotate(-10deg);clip-path:polygon(50% 0%,61% 12%,75% 6%,78% 22%,94% 25%,88% 40%,100% 50%,88% 60%,94% 75%,78% 78%,75% 94%,61% 88%,50% 100%,39% 88%,25% 94%,22% 78%,6% 75%,12% 60%,0% 50%,12% 40%,6% 25%,22% 22%,25% 6%,39% 12%)}
+.star b{font-family:"Alfa Slab One",Georgia,serif;font-weight:400;font-size:32cqw;line-height:1}.star span{font-size:13cqw;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
 main{max-width:56rem;margin:0 auto;padding:0 1rem 1rem}
 .info{background:var(--sec);color:var(--sec-fg);border:2px solid var(--pri);border-radius:.5rem;padding:1rem;margin-bottom:1.2rem;text-align:center}
 .info p{margin:0}
@@ -97,9 +98,11 @@ footer p{margin:.2rem 0}
 </head>
 <body>
 <header>
-  <div class="star"><b>46ª</b><span>edizione</span></div>
   <p class="kicker">Insieme per Alluvioni APS</p>
-  <h1 class="display">Sagra <small>del</small><br>Sedano</h1>
+  <div class="titlewrap">
+    <h1 class="display">Sagra <small>del</small><br>Sedano</h1>
+    <div class="star"><b>45ª</b><span>edizione</span></div>
+  </div>
   <p class="sub display">Alluvioni Cambiò</p>
   <h2 class="menu display">Menù</h2>
 </header>
@@ -1455,6 +1458,35 @@ $("again").onclick=function(){cart={};covers=0;$("res").style.display="none";ren
 
 if(!ORDINI_APERTI){$("closed").hidden=false;$("how").hidden=true}
 render();
+</script>
+<script>
+/* Stella: altezza = dal bordo alto della S di "Sagra" al bordo basso della S di "Sedano" */
+(function(){
+  function fit(){
+    try{
+      var h1=document.querySelector('.titlewrap h1'),st=document.querySelector('.titlewrap .star');
+      if(!h1||!st)return;
+      var cs=getComputedStyle(h1),L=parseFloat(cs.lineHeight);
+      if(!L||isNaN(L))L=parseFloat(cs.fontSize)*0.88;
+      var ctx=document.createElement('canvas').getContext('2d');
+      ctx.font=cs.fontStyle+' '+cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;
+      var m=ctx.measureText('S');
+      var asc=m.actualBoundingBoxAscent,desc=m.actualBoundingBoxDescent;
+      var fa=m.fontBoundingBoxAscent,fd=m.fontBoundingBoxDescent;
+      if(!(asc>0)||!(fa>0))return;
+      var base=(L-(fa+fd))/2+fa;          /* baseline della prima riga */
+      var k=1.015;                          /* compensa l'inclinazione di 10° */
+      var H=(L+asc+desc)*k, top=base-asc-(H-(L+asc+desc))/2;
+      st.style.width=st.style.height=H+'px';
+      st.style.top=(top+10)+'px';
+      st.style.transform='rotate(-10deg)';
+    }catch(e){}
+  }
+  var f=getComputedStyle(document.body).fontFamily;
+  (document.fonts&&document.fonts.load?document.fonts.load('1em "Alfa Slab One"'):Promise.resolve()).then(fit,fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  window.addEventListener('resize',fit);window.addEventListener('load',fit);
+})();
 </script>
 </body>
 </html>
