@@ -1342,7 +1342,7 @@ var QRCode=__req('QRCode'),QRErrorCorrectLevel=__req('QRErrorCorrectLevel');
 </script>
 <script>
 /* ============ CONFIGURAZIONE (modifica qui) ============ */
-var ORDINI_APERTI = false;      // metti false per chiudere gli ordini online
+var ORDINI_APERTI = true;      // metti false per chiudere gli ordini online
 var WHATSAPP = "";             // es. "393331234567" (prefisso senza +). Vuoto = pulsante nascosto
 /* ======================================================== */
 
@@ -1404,7 +1404,7 @@ function render(){
     if((active!=="Tutti"&&m.cat!==active)||m.name.toLocaleLowerCase("it").indexOf(term)<0)return;
     if(m.cat!==lastCat){html+='<h3 class="cat display">'+m.cat+'</h3>';lastCat=m.cat}
     var n=cart[m.id]||0;
-    html+='<article class="'+(n?'sel':'')+'"><button class="info-btn" data-info="'+m.id+'" aria-label="Allergeni: '+m.name+'">i</button><div class="ph display">'+phInner(m)+'</div><div class="body"><div><h4>'+m.name+'</h4>'+(m.note?'<p class="note">'+m.note+'</p>':'')+'</div><div class="row"><span class="price">'+eur(m.price)+'</span>'+
+    html+='<article class="'+(n?'sel':'')+'">'+(m.cat!=="Bevande"?'<button class="info-btn" data-info="'+m.id+'" aria-label="Allergeni: '+m.name+'">i</button>':'')+'<div class="ph display">'+phInner(m)+'</div><div class="body"><div><h4>'+m.name+'</h4>'+(m.note?'<p class="note">'+m.note+'</p>':'')+'</div><div class="row"><span class="price">'+eur(m.price)+'</span>'+
       (!ORDINI_APERTI?'':n?qtyHtml(m.id,n):'<button class="add" data-id="'+m.id+'" data-d="1">Aggiungi</button>')+'</div></div></article>';
   });
   $("grid").innerHTML=html||'<p class="mut">Nessun piatto trovato.</p>';
