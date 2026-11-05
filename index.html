@@ -1457,8 +1457,8 @@ var MENU = [
    Ogni gusto: [id, nome, allergeni, immagine]
    - id: codice breve che finisce nel QR per la cassa. Deve essere unico, senza spazi, virgole o "|".
    - allergeni: come nel menu, es. "Latte, Uova" (anche "" se nessuno)
-   - immagine: percorso, es. "img/gusti/tiramisu.jpg". Se lasci "" cerca img/<nome-gusto>.jpg
-     (es. img/tiramisu.jpg, img/affogato-al-cioccolato.jpg); se il file non c'e' compare la lettera iniziale.
+   - immagine: percorso, es. "img/gusti/tiramisu.jpg". Se lasci "" cerca img/dolci/<nome-gusto>.jpg
+     e poi img/<nome-gusto>.jpg (es. img/dolci/tiramisu.jpg); se il file non c'e' compare la lettera iniziale.
    Il prezzo di ogni gusto e' quello del piatto "Gelato". Per togliere un gusto basta cancellarne la riga. */
 var GUSTI_DI = "Gelato";
 var GUSTI = [
@@ -1471,7 +1471,7 @@ var GUSTI = [
 ].map(function(g){return{id:g[0],name:g[1],all:g[2],img:g[3],di:GUSTI_DI}});
 /* ---- GUSTI DELLA TORTA ----  (stesso formato dei gusti del gelato)
    GUSTI_TORTA_DI = id del piatto del MENU che apre la scelta del gusto (qui "Torta").
-   Il prezzo di ogni gusto e' quello del piatto "Torta". Immagine: se "" cerca img/<nome-gusto>.jpg */
+   Il prezzo di ogni gusto e' quello del piatto "Torta". Immagine: se "" cerca img/dolci/<nome-gusto>.jpg e poi img/<nome-gusto>.jpg */
 var GUSTI_TORTA_DI = "Torta";
 var GUSTI_TORTA = [
  ["Torta.Mela","Mele e amaretto","Cereali, Uova, Latte, Frutta a guscio",""],
@@ -1490,7 +1490,20 @@ var ICONS={
   "Timorasso":"<svg viewBox='0 0 48 48' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M21.5 8h5v14c0 2 4.5 4 4.5 8v11a3 3 0 0 1-3 3H20a3 3 0 0 1-3-3V30c0-4 4.5-6 4.5-8z' fill='#e3d27c'/><rect x='21.5' y='3' width='5' height='6' rx='1' fill='#c9a227'/><ellipse cx='24' cy='35' rx='5' ry='4' fill='#f4f1ea' stroke-width='1.5'/></svg>",
   "Birra":"<svg viewBox='0 0 48 48' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M12 16h20v22a3 3 0 0 1-3 3H15a3 3 0 0 1-3-3z' fill='#e9a825'/><path d='M32 21h3a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-3'/><circle cx='16' cy='13' r='4.5' fill='#fff'/><circle cx='24' cy='11' r='5' fill='#fff'/><circle cx='30' cy='14' r='4' fill='#fff'/><path d='M18 23v12M24 23v12M30 23v12' stroke='#fff' stroke-opacity='.6'/></svg>"
 };
-function phInner(m){return ICONS[m.id]||m.name.charAt(0)+'<img src="img/'+slug(m.name)+'.jpg" alt="" loading="lazy" onerror="this.remove()">'}
+/* ---- RICERCA IMMAGINI ----
+   Per ogni piatto si prova, nell'ordine:
+   1) img/<sottocartella>/<nome-piatto>.jpg   (sottocartella in base alla categoria, vedi SUBDIR)
+   2) img/<nome-piatto>.jpg                   (cartella generale)
+   Se nessun file esiste, resta la lettera iniziale. */
+var SUBDIR={"Antipasti":"antipasti","Primi piatti":"primi","Secondi piatti":"secondi","Dolci":"dolci"};
+function imgNext(el){var a=el.getAttribute("data-alt");if(!a){el.remove();return}var p=a.split("|");el.setAttribute("data-alt",p.slice(1).join("|"));el.src=p[0]}
+function imgTag(cat,name,explicit){
+  var s=slug(name),sub=SUBDIR[cat],l=[];
+  if(explicit)l.push(explicit);
+  if(sub)l.push("img/"+sub+"/"+s+".jpg");
+  l.push("img/"+s+".jpg");
+  return '<img src="'+l[0]+'" data-alt="'+l.slice(1).join("|")+'" alt="" loading="lazy" onerror="imgNext(this)">'}
+function phInner(m){return ICONS[m.id]||m.name.charAt(0)+imgTag(m.cat,m.name)}
 var eur = function(n){return n.toLocaleString("it-IT",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2})+"€"};
 var covers = 0, cart = {}, active = "Tutti", last = null;
 
@@ -1533,7 +1546,7 @@ function render(){
 }
 
 function gCount(di){var c=0;(grp(di)||[]).forEach(function(g){c+=cart[g.id]||0});return c}
-function gPh(g){return g.name.charAt(0)+'<img src="'+(g.img||'img/'+slug(g.name)+'.jpg')+'" alt="" loading="lazy" onerror="this.remove()">'}
+function gPh(g){return g.name.charAt(0)+imgTag(byId(g.di).cat,g.name,g.img)}
 function gustiList(di){
   var base=byId(di);
   $("gt").textContent=base.name;
