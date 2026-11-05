@@ -54,6 +54,10 @@ main{max-width:56rem;margin:0 auto;padding:0 1rem 1rem}
 .grow h4{padding-right:0}
 .grow .alrow{margin:.1rem 0 0}
 .grow .alrow .alitem img{width:1.3rem;height:1.3rem}
+.body .alrow,.gb .alrow{flex-wrap:nowrap;align-items:center;height:1.3rem;overflow:hidden}
+.body .alrow{margin:.5rem 0 0}
+.alrow .alitem{flex:none}
+.alrow .almore{display:flex;align-items:center;justify-content:center;box-sizing:border-box;height:1.3rem;min-width:1.3rem;padding:0 .35rem;border-radius:99px;background:var(--pri);color:var(--pri-fg);font-weight:800;font-size:.75rem;line-height:1}
 .gb{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:.35rem;padding:.55rem .65rem}
 .gr{justify-content:flex-end}
 .algrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.6rem,1fr));gap:.9rem .5rem;margin:.5rem 0 1rem}
@@ -79,6 +83,17 @@ article.sel{border-color:var(--pri)}
 h4{margin:0;padding-right:1.9rem;font-size:1.2rem;text-transform:uppercase;line-height:1.1;color:var(--pri)}
 .note{font-size:.95rem;color:var(--mut);margin:.2rem 0 0}
 .row{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+/* Riquadri uniformi: foto sempre 4:5, altezza del riquadro = altezza della foto */
+article{--pw:clamp(7rem,30vw,9rem);height:calc(var(--pw)*1.25 + 4px);min-height:0}
+article .ph{width:var(--pw)}
+article .body{min-width:0;min-height:0;overflow:hidden;padding:.65rem .75rem;gap:.35rem}
+article h4{font-size:1.1rem;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+article .note{font-size:.85rem;line-height:1.25;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+article .body .alrow{margin:.35rem 0 0}
+.grow{--pw:5.8rem;height:calc(var(--pw)*1.25 + 4px);min-height:0}
+.grow .ph{width:var(--pw)}
+.grow .gb{min-width:0;min-height:0;overflow:hidden}
+.grow h4{font-size:1.05rem;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
 .price{background:var(--pri);color:var(--pri-fg);font-weight:800;padding:.1rem .45rem;border-radius:.2rem;letter-spacing:.02em}
 .add{font:inherit;font-weight:800;text-transform:uppercase;background:var(--pri);color:var(--pri-fg);border:0;border-radius:.4rem;padding:.3rem .8rem;cursor:pointer}
 .qty{display:flex;align-items:center;gap:.5rem}
@@ -1497,7 +1512,7 @@ function render(){
     if((active!=="Tutti"&&m.cat!==active)||(m.name+" "+(grp(m.id)||[]).map(function(g){return g.name}).join(" ")).toLocaleLowerCase("it").indexOf(term)<0)return;
     if(m.cat!==lastCat){html+='<h3 class="cat display">'+m.cat+'</h3>';lastCat=m.cat}
     var isG=!!grp(m.id), n=isG?gCount(m.id):(cart[m.id]||0);
-    html+='<article class="'+(n?'sel':'')+'">'+(m.cat!=="Bevande"&&!isG?'<button class="info-btn" data-info="'+m.id+'" aria-label="Allergeni: '+m.name+'">i</button>':'')+'<div class="ph display">'+phInner(m)+'</div><div class="body"><div><h4>'+m.name+'</h4>'+(m.note?'<p class="note">'+m.note+'</p>':'')+(m.all?allHtml(m.all,'alrow'):'')+'</div><div class="row"><span class="price">'+eur(m.price)+'</span>'+
+    html+='<article class="'+(n?'sel':'')+'">'+(m.cat!=="Bevande"&&!isG?'<button class="info-btn" data-info="'+m.id+'" aria-label="Allergeni: '+m.name+'">i</button>':'')+'<div class="ph display">'+phInner(m)+'</div><div class="body"><div><h4>'+m.name+'</h4>'+(m.note?'<p class="note">'+m.note+'</p>':'')+allHtml(m.all||'','alrow')+'</div><div class="row"><span class="price">'+eur(m.price)+'</span>'+
       (isG?'<button class="add" data-gusti="'+m.id+'">'+(!ORDINI_APERTI?'Vedi gusti':n?'Gusti ('+n+')':'Scegli gusto')+'</button>':!ORDINI_APERTI?'':n?qtyHtml(m.id,n):'<button class="add" data-id="'+m.id+'" data-d="1">Aggiungi</button>')+'</div></div></article>';
   });
   $("grid").innerHTML=html||'<p class="mut">Nessun piatto trovato.</p>';
@@ -1524,12 +1539,30 @@ function gustiList(di){
   $("gt").textContent=base.name;
   $("glbl").textContent="Scegli il gusto · "+eur(base.price)+" a porzione";
   $("glist").innerHTML=grp(di).map(function(g){var n=cart[g.id]||0;
-    return '<div class="grow'+(n?' sel':'')+'"><div class="ph display">'+gPh(g)+'</div><div class="gb"><div><h4>'+g.name+'</h4>'+(g.all?allHtml(g.all,'alrow'):'')+'</div>'+
+    return '<div class="grow'+(n?' sel':'')+'"><div class="ph display">'+gPh(g)+'</div><div class="gb"><div><h4>'+g.name+'</h4>'+allHtml(g.all||'','alrow')+'</div>'+
       (ORDINI_APERTI?'<div class="row gr">'+(n?qtyHtml(g.id,n):'<button class="add" data-id="'+g.id+'" data-d="1">Aggiungi</button>')+'</div>':'')+'</div></div>'}).join("");
 }
 var gOpen=null;
 function openGusti(di){gOpen=di;gustiList(di);$("gmodal").classList.add("on")}
-var __render=render;render=function(){__render();if($("gmodal").classList.contains("on"))gustiList(gOpen)};
+function fitAl(){
+  document.querySelectorAll('article .alrow, .grow .alrow').forEach(function(r){
+    var old=r.querySelector('.almore'); if(old)old.remove();
+    var it=[].slice.call(r.children);
+    it.forEach(function(e){e.style.display=''});
+    var R=r.getBoundingClientRect(); if(!R.width||!it.length)return;
+    function fits(e){return e.getBoundingClientRect().right<=R.right+0.5}
+    if(fits(it[it.length-1]))return;
+    var b=document.createElement('div'); b.className='alitem almore';
+    for(var k=it.length-1;k>=0;k--){
+      for(var j=0;j<it.length;j++)it[j].style.display=j<k?'':'none';
+      b.textContent='+'+(it.length-k); r.appendChild(b);
+      if(fits(b))break;
+    }
+  });
+}
+var __render=render;render=function(){__render();if($("gmodal").classList.contains("on"))gustiList(gOpen);fitAl()};
+var __openGusti=openGusti;openGusti=function(di){__openGusti(di);fitAl()};
+window.addEventListener('resize',fitAl);window.addEventListener('load',fitAl);
 
 document.addEventListener("click",function(e){
   var b=e.target.closest("button"); if(!b)return;
