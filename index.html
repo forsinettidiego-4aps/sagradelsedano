@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Menù online – Sagra del Sedano 2026 · Alluvioni Cambiò</title>
+<title>[PROVA] Menù online – Sagra del Sedano 2026 · Alluvioni Cambiò</title>
 <meta name="description" content="Scegli i piatti della 45ª Sagra del Sedano e genera il QR dell'ordine da mostrare in cassa.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,14 +35,31 @@ main{max-width:56rem;margin:0 auto;padding:0 1rem 1rem}
 .warn{color:#c0392b;font-weight:800;margin:.8rem 0 0;text-align:center}
 .info-btn{position:absolute;top:.45rem;right:.45rem;width:1.6rem;height:1.6rem;padding:0;border:2px solid #000;border-radius:50%;background:#fff;color:#000;font:italic 700 1rem/1 Georgia,serif;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .info-btn:hover{background:#000;color:#fff}
-#modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.5)}
-#modal.on{display:flex}
-#modal .box{position:relative;width:100%;max-width:22rem;background:#fff;color:var(--fg);border:3px solid var(--pri);border-radius:.6rem;padding:1.3rem 1.2rem 1.1rem}
-#modal h3{margin:0 2rem .6rem 0;font-size:1.5rem;color:var(--pri);text-transform:uppercase;line-height:1.1}
-#modal .lbl{font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:.95rem;color:var(--mut)}
-#modal .al{font-size:1.4rem;font-weight:800;margin:.2rem 0 .8rem}
-#modal .sm{font-size:.95rem;color:var(--mut);margin:0}
-#modal .x{position:absolute;top:.5rem;right:.5rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;background:var(--sec);color:var(--pri);font:inherit;font-size:1.4rem;line-height:1;cursor:pointer}
+#modal,#gmodal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.5)}
+#modal.on,#gmodal.on{display:flex}
+#modal .box,#gmodal .box{position:relative;width:100%;max-width:22rem;background:#fff;color:var(--fg);border:3px solid var(--pri);border-radius:.6rem;padding:1.3rem 1.2rem 1.1rem}
+#modal h3,#gmodal h3{margin:0 2rem .6rem 0;font-size:1.5rem;color:var(--pri);text-transform:uppercase;line-height:1.1}
+#modal .lbl,#gmodal .lbl{font-weight:800;text-transform:uppercase;letter-spacing:.05em;font-size:.95rem;color:var(--mut)}
+#modal .al,#gmodal .al{font-size:1.4rem;font-weight:800;margin:.2rem 0 .8rem}
+#modal .sm,#gmodal .sm{font-size:.95rem;color:var(--mut);margin:0}
+#modal .x,#gmodal .x{position:absolute;top:.5rem;right:.5rem;width:2.2rem;height:2.2rem;border:0;border-radius:50%;background:var(--sec);color:var(--pri);font:inherit;font-size:1.4rem;line-height:1;cursor:pointer}
+#modal .box,#gmodal .box{max-height:90vh;overflow-y:auto}
+.alrow{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0 0}
+.alrow .alitem{width:auto}
+.alrow .alitem img{width:1.3rem;height:1.3rem}
+.alrow .alitem span{font-size:.7rem;line-height:1.05}
+#gmodal .box{max-width:28rem}
+.grow{display:flex;overflow:hidden;border:2px solid var(--pri);border-radius:.5rem;background:var(--card);margin:0 0 .7rem;min-height:5rem}
+.grow .ph{width:4.6rem}
+.grow h4{padding-right:0}
+.grow .alrow{margin:.1rem 0 0}
+.grow .alrow .alitem img{width:1.3rem;height:1.3rem}
+.gb{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:.35rem;padding:.55rem .65rem}
+.gr{justify-content:flex-end}
+.algrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.6rem,1fr));gap:.9rem .5rem;margin:.5rem 0 1rem}
+.alitem{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.35rem}
+.alitem img{width:4rem;height:4rem;display:block}
+.alitem span{font-weight:700;text-transform:uppercase;line-height:1.1;font-size:1rem;color:var(--pri)}
 #q{width:100%;font:inherit;padding:.7rem 1rem;border:1px solid var(--bd);border-radius:.5rem;background:var(--card);color:inherit}
 #q:focus,button:focus-visible{outline:2px solid var(--pri);outline-offset:1px}
 nav{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin:1rem 0}
@@ -142,6 +159,11 @@ footer p{margin:.2rem 0}
   <div class="box"><button class="x" data-close="1" aria-label="Chiudi">×</button>
     <h3 id="mt"></h3><div class="lbl">Allergeni</div><div class="al" id="mal"></div>
     <p class="sm">Per allergie o intolleranze chiedi sempre conferma al personale.</p></div>
+</div>
+<div id="gmodal" role="dialog" aria-modal="true" aria-labelledby="gt">
+  <div class="box"><button class="x" data-gclose="1" aria-label="Chiudi">×</button>
+    <h3 id="gt"></h3><div class="lbl" id="glbl"></div><div id="glist" style="margin-top:.8rem"></div>
+    <button class="big" data-gclose="1">Fatto</button></div>
 </div>
 <section class="social">
   <p>Seguici sui social</p>
@@ -1341,29 +1363,70 @@ module.exports = QRCode;
 var QRCode=__req('QRCode'),QRErrorCorrectLevel=__req('QRErrorCorrectLevel');
 </script>
 <script>
+/* ============ ALLERGENI ============
+   Elenco delle icone. Di norma NON serve toccarlo.
+   Nel MENU scrivi il nome dell'allergene (anche piu' di uno, separati da virgola):
+   compariranno l'icona e la scritta. Nomi validi: Cereali, Crostacei, Uova, Pesce, Arachidi, Soia,
+   Latte, Frutta a guscio, Sedano, Senape, Semi di sesamo, Anidride solforosa e solfiti, Lupini, Molluschi,
+   Funghi, Mais. (maiuscole/minuscole e accenti non contano; valgono anche: glutine, latticini, solfiti, sesamo) */
+var ALLERGENI=[
+ {nome:"Cereali",alias:["glutine","cereali contenenti glutine"],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjZjVhNjIzIH0gCgkJLnMxIHsgZmlsbDogIzAwMDAwMDtzdHJva2U6ICNmZmZmZmY7c3Ryb2tlLXdpZHRoOiAzIH0gCgkJLnMyIHsgZmlsbDogI2ZmZmZmZiB9IAoJPC9zdHlsZT4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODggMTc2Yy00OC42NiAwLTg4LTM5LjM0LTg4LTg4IDAtNDguNjYgMzkuMzQtODggODgtODggNDguNjYgMCA4OCAzOS4zNCA4OCA4OCAwIDQ4LjY2LTM5LjM0IDg4LTg4IDg4eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczEiIGQ9Im04OCA0OHY5MCIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczIiIGQ9Im04OCA1OWMtMy44NyAwLTctNS44MS03LTEzIDAtNy4xOSAzLjEzLTEzIDctMTMgMy44NyAwIDcgNS44MSA3IDEzIDAgNy4xOS0zLjEzIDEzLTcgMTN6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTY2IDc2LjcyYy0yLjk2LTIuNDgtMS4zNC05LjI5IDMuNjQtMTUuMjIgNC45Ny01LjkzIDExLjM5LTguNzEgMTQuMzYtNi4yMiAyLjk2IDIuNDggMS4zNCA5LjI5LTMuNjQgMTUuMjItNC45NyA1LjkzLTExLjM5IDguNzEtMTQuMzYgNi4yMnoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMyIiBkPSJtMTEwIDc2LjcyYy0yLjk3IDIuNDktOS4zOS0wLjI5LTE0LjM2LTYuMjItNC45OC01LjkzLTYuNi0xMi43NC0zLjY0LTE1LjIyIDIuOTctMi40OSA5LjM5IDAuMjkgMTQuMzYgNi4yMiA0Ljk4IDUuOTMgNi42IDEyLjc0IDMuNjQgMTUuMjJ6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTY2IDk2LjcyYy0yLjk2LTIuNDgtMS4zNC05LjI5IDMuNjQtMTUuMjIgNC45Ny01LjkzIDExLjM5LTguNzEgMTQuMzYtNi4yMiAyLjk2IDIuNDggMS4zNCA5LjI5LTMuNjQgMTUuMjItNC45NyA1LjkzLTExLjM5IDguNzEtMTQuMzYgNi4yMnoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMyIiBkPSJtMTEwIDk2LjcyYy0yLjk3IDIuNDktOS4zOS0wLjI5LTE0LjM2LTYuMjItNC45OC01LjkzLTYuNi0xMi43NC0zLjY0LTE1LjIyIDIuOTctMi40OSA5LjM5IDAuMjkgMTQuMzYgNi4yMiA0Ljk4IDUuOTMgNi42IDEyLjc0IDMuNjQgMTUuMjJ6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTY2IDExNi43MmMtMi45Ni0yLjQ4LTEuMzQtOS4yOSAzLjY0LTE1LjIyIDQuOTctNS45MyAxMS4zOS04LjcxIDE0LjM2LTYuMjIgMi45NiAyLjQ4IDEuMzQgOS4yOS0zLjY0IDE1LjIyLTQuOTcgNS45My0xMS4zOSA4LjcxLTE0LjM2IDYuMjJ6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTExMCAxMTYuNzJjLTIuOTcgMi40OS05LjM5LTAuMjktMTQuMzYtNi4yMi00Ljk4LTUuOTMtNi42LTEyLjc0LTMuNjQtMTUuMjIgMi45Ny0yLjQ5IDkuMzkgMC4yOSAxNC4zNiA2LjIyIDQuOTggNS45MyA2LjYgMTIuNzQgMy42NCAxNS4yMnoiLz4KPC9zdmc+"},
+ {nome:"Crostacei",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjZWU1YTI0IH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6IG5vbmU7c3Ryb2tlOiAjZmZmZmZmO3N0cm9rZS1saW5lY2FwOiByb3VuZDtzdHJva2Utd2lkdGg6IDUgfSAKCQkuczMgeyBmaWxsOiBub25lO3N0cm9rZTogI2ZmZmZmZjtzdHJva2Utd2lkdGg6IDEuNSB9IAoJCS5zNCB7IGZpbGw6ICMwMDAwMDA7c3Ryb2tlOiAjZmZmZmZmO3N0cm9rZS1saW5lY2FwOiByb3VuZDtzdHJva2Utd2lkdGg6IDMgfSAKCTwvc3R5bGU+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTg4IDE3NmMtNDguNjYgMC04OC0zOS4zNC04OC04OCAwLTQ4LjY2IDM5LjM0LTg4IDg4LTg4IDQ4LjY2IDAgODggMzkuMzQgODggODggMCA0OC42Ni0zOS4zNCA4OC04OCA4OHoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMxIiBkPSJtODggMTA1Yy03LjE5IDAtMTMtOS44My0xMy0yMiAwLTEyLjE3IDUuODEtMjIgMTMtMjIgNy4xOSAwIDEzIDkuODMgMTMgMjIgMCAxMi4xNy01LjgxIDIyLTEzIDIyeiIvPgoJPHBhdGggY2xhc3M9InMxIiBkPSJtNzYgMTAwaDI0bC0zIDEwaC0xOHptMiAxMmgyMGwtMyA5aC0xNHptMiAxMWgxNmwtMiA4aC0xMnoiLz4KCTxwYXRoIGNsYXNzPSJzMSIgZD0ibTg4IDEzMWwtMTQgMTBoMjh6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTc4IDY4Yy0xMC04LTE0LTE2LTE2LTI2bTM2IDI2YzEwLTggMTQtMTYgMTYtMjYiLz4KCTxwYXRoIGNsYXNzPSJzMSIgZD0ibTU2IDMwbC02IDE0IDEwIDJ6bTY0IDBsNiAxNC0xMCAyeiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczMiIGQ9Im04MyA2MHEtMTAtMjItMjUtMjdtMzUgMjdxMTAtMjIgMjUtMjciLz4KCTxwYXRoIGNsYXNzPSJzNCIgZD0ibTc2IDg4bC0xNCA2bTE0IDJsLTE0IDhtMzgtMTZsMTQgNm0tMTQgMmwxNCA4Ii8+Cjwvc3ZnPg=="},
+ {nome:"Uova",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjZTBiNDhhIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6IG5vbmU7c3Ryb2tlOiAjZTBiNDhhO3N0cm9rZS1saW5lY2FwOiByb3VuZDtzdHJva2Utd2lkdGg6IDMgfSAKCTwvc3R5bGU+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTg4IDE3NmMtNDguNjYgMC04OC0zOS4zNC04OC04OCAwLTQ4LjY2IDM5LjM0LTg4IDg4LTg4IDQ4LjY2IDAgODggMzkuMzQgODggODggMCA0OC42Ni0zOS4zNCA4OC04OCA4OHoiLz4KCTxwYXRoIGNsYXNzPSJzMSIgZD0ibTg4IDQwYzI2IDAgNDAgNDMgNDAgNjMgMCAyMy0xOCAzNy00MCAzNy0yMiAwLTQwLTE0LTQwLTM3IDAtMjAgMTQtNjMgNDAtNjN6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTY4IDY4YzQtMTIgMTItMTggMTgtMjAiLz4KPC9zdmc+"},
+ {nome:"Pesce",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjMTU2NWMwIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6IG5vbmU7c3Ryb2tlOiAjMTU2NWMwO3N0cm9rZS13aWR0aDogMi41IH0gCgk8L3N0eWxlPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im04OCAxNzZjLTQ4LjY2IDAtODgtMzkuMzQtODgtODggMC00OC42NiAzOS4zNC04OCA4OC04OCA0OC42NiAwIDg4IDM5LjM0IDg4IDg4IDAgNDguNjYtMzkuMzQgODgtODggODh6Ii8+Cgk8cGF0aCBjbGFzcz0iczEiIGQ9Im00MCA4OGMxOC0yNCA1OC0yOCA4MC00bDE4LTE2LTQgMjAgNCAyMC0xOC0xNmMtMjIgMjQtNjIgMjAtODAtNHoiLz4KCTxwYXRoIGNsYXNzPSJzMSIgZD0ibTgwIDY4bDE0LTggOCAxMHptOCAzOGw4IDEwIDYtOHoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtNTggODhjLTIuMjEgMC00LTEuNzktNC00IDAtMi4yMSAxLjc5LTQgNC00IDIuMjEgMCA0IDEuNzkgNCA0IDAgMi4yMS0xLjc5IDQtNCA0eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczIiIGQ9Im03MCA3NHE2IDE0IDAgMjgiLz4KPC9zdmc+"},
+ {nome:"Arachidi",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjOGI1ZTM0IH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6ICMwMDAwMDA7c3Ryb2tlOiAjOGI1ZTM0O3N0cm9rZS13aWR0aDogMS41IH0gCgk8L3N0eWxlPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im04OCAxNzZjLTQ4LjY2IDAtODgtMzkuMzQtODgtODggMC00OC42NiAzOS4zNC04OCA4OC04OCA0OC42NiAwIDg4IDM5LjM0IDg4IDg4IDAgNDguNjYtMzkuMzQgODgtODggODh6Ii8+Cgk8cGF0aCBjbGFzcz0iczEiIGQ9Im00NCA4OGMwLTE4IDIyLTIwIDM0LTEyIDYgNCAxNCA0IDIwIDAgMTItOCAzNC02IDM0IDEyIDAgMTgtMjIgMjAtMzQgMTItNi00LTE0LTQtMjAgMC0xMiA4LTM0IDYtMzQtMTJ6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTU2IDc0djI4Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTY4IDc0djI4Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTEwOCA3NHYyOCIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczIiIGQ9Im0xMjAgNzR2MjgiLz4KCTxwYXRoIGNsYXNzPSJzMiIgZD0ibTQ4IDg0aDgwbS04MCA4aDgwIi8+Cjwvc3ZnPg=="},
+ {nome:"Soia",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjMGE5MTQyIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6ICNmZmZmZmY7c3Ryb2tlOiAjMGE5MTQyO3N0cm9rZS13aWR0aDogMyB9IAoJCS5zMyB7IGZpbGw6IG5vbmU7c3Ryb2tlOiAjZmZmZmZmO3N0cm9rZS1saW5lY2FwOiByb3VuZDtzdHJva2Utd2lkdGg6IDMgfSAKCTwvc3R5bGU+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTg4IDE3NmMtNDguNjYgMC04OC0zOS4zNC04OC04OCAwLTQ4LjY2IDM5LjM0LTg4IDg4LTg4IDQ4LjY2IDAgODggMzkuMzQgODggODggMCA0OC42Ni0zOS4zNCA4OC04OCA4OHoiLz4KCTxwYXRoIGNsYXNzPSJzMSIgZD0ibTY0IDU4Yy0xNiAyMC0xNCA2MC0yIDc0IDggNiAyMi00IDI0LTIwIDItMjAtMi00MC0yMi01NHoiLz4KCTxwYXRoIGNsYXNzPSJzMiIgZD0ibTk2IDU0YzE0IDEwIDI4IDM4IDI2IDY2LTIgMTYtMTggMTgtMjQgNi0xMC0yMi0xMi01Mi0yLTcyeiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczMiIGQ9Im05NiA1NHE2LTggMTQtMTAiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtMTAyIDg0Yy0zLjg3IDAtNy0zLjU4LTctOCAwLTQuNDIgMy4xMy04IDctOCAzLjg3IDAgNyAzLjU4IDcgOCAwIDQuNDItMy4xMyA4LTcgOHoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMxIiBkPSJtMTAyIDgxLjVjLTIuNDkgMC00LjUtMi40Ni00LjUtNS41IDAtMy4wNCAyLjAxLTUuNSA0LjUtNS41IDIuNDkgMCA0LjUgMi40NiA0LjUgNS41IDAgMy4wNC0yLjAxIDUuNS00LjUgNS41eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im0xMDggMTA2Yy0zLjg3IDAtNy0zLjU4LTctOCAwLTQuNDIgMy4xMy04IDctOCAzLjg3IDAgNyAzLjU4IDcgOCAwIDQuNDItMy4xMyA4LTcgOHoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMxIiBkPSJtMTA4IDEwMy41Yy0yLjQ5IDAtNC41LTIuNDYtNC41LTUuNSAwLTMuMDQgMi4wMS01LjUgNC41LTUuNSAyLjQ5IDAgNC41IDIuNDYgNC41IDUuNSAwIDMuMDQtMi4wMSA1LjUtNC41IDUuNXoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtMTEyIDEyOGMtMy44NyAwLTctMy41OC03LTggMC00LjQyIDMuMTMtOCA3LTggMy44NyAwIDcgMy41OCA3IDggMCA0LjQyLTMuMTMgOC03IDh6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMSIgZD0ibTExMiAxMjUuNWMtMi40OSAwLTQuNS0yLjQ2LTQuNS01LjUgMC0zLjA0IDIuMDEtNS41IDQuNS01LjUgMi40OSAwIDQuNSAyLjQ2IDQuNSA1LjUgMCAzLjA0LTIuMDEgNS41LTQuNSA1LjV6Ii8+Cjwvc3ZnPg=="},
+ {nome:"Latte",alias:["latticini","lattosio"],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjMjlhOGUwIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6IG5vbmU7c3Ryb2tlOiAjMjlhOGUwO3N0cm9rZS13aWR0aDogMi41IH0gCgk8L3N0eWxlPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im04OCAxNzZjLTQ4LjY2IDAtODgtMzkuMzQtODgtODggMC00OC42NiAzOS4zNC04OCA4OC04OCA0OC42NiAwIDg4IDM5LjM0IDg4IDg4IDAgNDguNjYtMzkuMzQgODgtODggODh6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMSIgZD0ibTc5IDM4aDE4YzEuNjYgMCAzIDEuMzQgMyAzdjRjMCAxLjY2LTEuMzQgMy0zIDNoLTE4Yy0xLjY2IDAtMy0xLjM0LTMtM3YtNGMwLTEuNjYgMS4zNC0zIDMtM3oiLz4KCTxwYXRoIGNsYXNzPSJzMSIgZD0ibTc4IDUwaDIwbDE0IDIwdjY2cTAgMC44LTAuMyAxLjUzLTAuMzEgMC43My0wLjg3IDEuMy0wLjU3IDAuNTYtMS4zIDAuODctMC43MyAwLjMtMS41MyAwLjNoLTQwcS0wLjggMC0xLjUzLTAuMy0wLjczLTAuMzEtMS4zLTAuODctMC41Ni0wLjU3LTAuODctMS4zLTAuMy0wLjczLTAuMy0xLjUzdi02NnoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMyIiBkPSJtNjQgODBxMTIgNiAyNCAwIDEyLTYgMjQgMCIvPgo8L3N2Zz4="},
+ {nome:"Frutta a guscio",alias:["frutta secca"],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjYzY5YzZkIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6IG5vbmU7c3Ryb2tlOiAjYzY5YzZkO3N0cm9rZS13aWR0aDogMyB9IAoJCS5zMyB7IGZpbGw6IG5vbmU7c3Ryb2tlOiAjYzY5YzZkO3N0cm9rZS1saW5lY2FwOiByb3VuZDtzdHJva2Utd2lkdGg6IDIgfSAKCTwvc3R5bGU+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTg4IDE3NmMtNDguNjYgMC04OC0zOS4zNC04OC04OCAwLTQ4LjY2IDM5LjM0LTg4IDg4LTg4IDQ4LjY2IDAgODggMzkuMzQgODggODggMCA0OC42Ni0zOS4zNCA4OC04OCA4OHoiLz4KCTxwYXRoIGNsYXNzPSJzMSIgZD0ibTQyIDg4YzYtMzAgMzYtMzYgNTAtMzQgMjYgMiA0NCAxOCA0MiAzOC0yIDI0LTI2IDM2LTQ4IDM0LTI0LTItNDItMTQtNDQtMzh6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTQyIDg4YzI2LTQgNjYtNCA5MiAyIi8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMyIgZD0ibTY4IDcwcTgtNCAxNiAwIi8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMyIgZD0ibTkyIDY2cTgtNCAxNiAwIi8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMyIgZD0ibTEwNiA3NnE4LTQgMTYgMCIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczMiIGQ9Im02NCAxMDJxOC00IDE2IDAiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMzIiBkPSJtODggMTA2cTgtNCAxNiAwIi8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMyIgZD0ibTEwOCAxMDBxOC00IDE2IDAiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMzIiBkPSJtNzggMTE2cTgtNCAxNiAwIi8+Cjwvc3ZnPg=="},
+ {nome:"Sedano",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjMGI2YjNhIH0gCgkJLnMxIHsgZmlsbDogbm9uZTtzdHJva2U6ICNmZmZmZmY7c3Ryb2tlLXdpZHRoOiAzIH0gCgkJLnMyIHsgZmlsbDogI2ZmZmZmZiB9IAoJPC9zdHlsZT4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODggMTc2Yy00OC42NiAwLTg4LTM5LjM0LTg4LTg4IDAtNDguNjYgMzkuMzQtODggODgtODggNDguNjYgMCA4OCAzOS4zNCA4OCA4OCAwIDQ4LjY2LTM5LjM0IDg4LTg4IDg4eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczEiIGQ9Im04OCAxMzh2LTYwbTAgMzBsLTI0LTIwbTI0IDE2bDI2LTIwIi8+Cgk8cGF0aCBjbGFzcz0iczIiIGQ9Im04OCA0OGw3IDkgOS0zLTMgMTAgOSA2LTExIDMgMSAxMi0xMi02LTEyIDYgMS0xMi0xMS0zIDktNi0zLTEwIDkgM3oiLz4KCTxwYXRoIGNsYXNzPSJzMiIgZD0ibTYwIDcybDcgOSA5LTMtMyAxMCA5IDYtMTEgMyAxIDEyLTEyLTYtMTIgNiAxLTEyLTExLTMgOS02LTMtMTAgOSAzeiIvPgoJPHBhdGggY2xhc3M9InMyIiBkPSJtMTE2IDY4bDcgOSA5LTMtMyAxMCA5IDYtMTEgMyAxIDEyLTEyLTYtMTIgNiAxLTEyLTExLTMgOS02LTMtMTAgOSAzeiIvPgo8L3N2Zz4="},
+ {nome:"Senape",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjZjI4YzFlIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJPC9zdHlsZT4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODggMTc2Yy00OC42NiAwLTg4LTM5LjM0LTg4LTg4IDAtNDguNjYgMzkuMzQtODggODgtODggNDguNjYgMCA4OCAzOS4zNCA4OCA4OCAwIDQ4LjY2LTM5LjM0IDg4LTg4IDg4eiIvPgoJPHBhdGggY2xhc3M9InMxIiBkPSJtODQgMzRoOGwzIDE2aC0xNHoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMxIiBkPSJtNzQgNTBoMjh2MTJoLTI4eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczEiIGQ9Im03NiA2MmgyNGM1LjUyIDAgMTAgNC40OCAxMCAxMHY2MGMwIDUuNTItNC40OCAxMC0xMCAxMGgtMjRjLTUuNTIgMC0xMC00LjQ4LTEwLTEwdi02MGMwLTUuNTIgNC40OC0xMCAxMC0xMHoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODAgNzhoMTZjMi4yMSAwIDQgMS43OSA0IDR2NDJjMCAyLjIxLTEuNzkgNC00IDRoLTE2Yy0yLjIxIDAtNC0xLjc5LTQtNHYtNDJjMC0yLjIxIDEuNzktNCA0LTR6Ii8+Cjwvc3ZnPg=="},
+ {nome:"Semi di sesamo",alias:["sesamo"],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjNTU0NTNmIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6ICNmZmZmZmY7c3Ryb2tlOiAjNTU0NTNmO3N0cm9rZS13aWR0aDogMyB9IAoJCS5zMyB7IGZpbGw6IG5vbmU7c3Ryb2tlOiAjNTU0NTNmO3N0cm9rZS13aWR0aDogMiB9IAoJPC9zdHlsZT4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODggMTc2Yy00OC42NiAwLTg4LTM5LjM0LTg4LTg4IDAtNDguNjYgMzkuMzQtODggODgtODggNDguNjYgMCA4OCAzOS4zNCA4OCA4OCAwIDQ4LjY2LTM5LjM0IDg4LTg4IDg4eiIvPgoJPHBhdGggY2xhc3M9InMxIiBkPSJtNzIgNjhjLTE0IDIwLTIyIDQwLTE4IDU4IDQgMTAgMjAgOCAyNi0yIDYtMTYgMi0zNi04LTU2eiIvPgoJPHBhdGggY2xhc3M9InMyIiBkPSJtMTAwIDQ2Yy0xNiAyOC0yNCA1NC0yMCA3NiA0IDE2IDMyIDE2IDM4IDAgNi0yMi0yLTQ4LTE4LTc2eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczMiIGQ9Im0xMDAgNjRjLTggMjQtMTAgNDItNCA2MiIvPgo8L3N2Zz4="},
+ {nome:"Anidride solforosa e solfiti",alias:["solfiti","anidride solforosa","solforosa"],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjMGI2ZmMyIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6ICMwMDAwMDA7c3Ryb2tlOiAjMGI2ZmMyIH0gCgk8L3N0eWxlPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im04OCAxNzZjLTQ4LjY2IDAtODgtMzkuMzQtODgtODggMC00OC42NiAzOS4zNC04OCA4OC04OCA0OC42NiAwIDg4IDM5LjM0IDg4IDg4IDAgNDguNjYtMzkuMzQgODgtODggODh6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMSIgZD0ibTc2IDM4aDI0YzEuMSAwIDIgMC45IDIgMnYyYzAgMS4xLTAuOSAyLTIgMmgtMjRjLTEuMSAwLTItMC45LTItMnYtMmMwLTEuMSAwLjktMiAyLTJ6Ii8+Cgk8cGF0aCBjbGFzcz0iczEiIGQ9Im03OCA0NGgyMHYzNGwzMiA1NGMwLjMxIDAuODUgMC40MiAxLjc3IDAuMzIgMi42Ny0wLjA5IDAuOS0wLjQgMS43Ny0wLjg4IDIuNTQtMC40OCAwLjc4LTEuMTMgMS40My0xLjkgMS45MS0wLjc3IDAuNDgtMS42NCAwLjc4LTIuNTQgMC44OGgtNzRjLTAuOS0wLjEtMS43Ny0wLjQtMi41NC0wLjg4LTAuNzctMC40OC0xLjQyLTEuMTMtMS45LTEuOTEtMC40OS0wLjc3LTAuNzktMS42NC0wLjg4LTIuNTQtMC4xLTAuOSAwLjAxLTEuODIgMC4zMi0yLjY3bDMyLTU0eiIvPgoJPHBhdGggY2xhc3M9InMyIiBkPSJtODIgNDZ2MzRtMTItMzR2MzQiLz4KCTxwYXRoIGlkPSJTTyIgY2xhc3M9InMwIiBhcmlhLWxhYmVsPSJTTyIgIGQ9Im04My44IDExMC4xdjIuM3EtMS4zLTAuNy0yLjUtMS0xLjItMC4zLTIuMy0wLjMtMS45IDAtMyAwLjgtMSAwLjctMSAyLjEgMCAxLjIgMC43IDEuOCAwLjcgMC41IDIuNiAwLjlsMS40IDAuM3EyLjcgMC41IDMuOSAxLjggMS4zIDEuMiAxLjMgMy40IDAgMi41LTEuNyAzLjgtMS43IDEuMy01IDEuMy0xLjIgMC0yLjctMC4yLTEuMy0wLjMtMi44LTAuOXYtMi40cTEuNCAwLjggMi44IDEuMiAxLjQgMC40IDIuNyAwLjQgMiAwIDMuMS0wLjggMS4xLTAuOCAxLjEtMi4zIDAtMS4yLTAuOC0yLTAuOC0wLjctMi42LTEuMWwtMS40LTAuMnEtMi43LTAuNi0zLjgtMS43LTEuMi0xLjEtMS4yLTMuMSAwLTIuMyAxLjYtMy43IDEuNy0xLjMgNC41LTEuMyAxLjMgMCAyLjUgMC4yIDEuMyAwLjIgMi42IDAuN3ptMTEuNyAxcS0yLjYgMC00LjEgMS45LTEuNiAyLTEuNiA1LjMgMCAzLjMgMS42IDUuMiAxLjUgMS45IDQuMSAxLjkgMi41IDAgNC0xLjkgMS41LTEuOSAxLjUtNS4yIDAtMy4zLTEuNS01LjMtMS41LTEuOS00LTEuOXptMC0xLjlxMy42IDAgNS44IDIuNSAyLjIgMi40IDIuMiA2LjYgMCA0LjEtMi4yIDYuNi0yLjIgMi40LTUuOCAyLjQtMy43IDAtNS45LTIuNC0yLjMtMi41LTIuMy02LjYgMC00LjIgMi4zLTYuNiAyLjItMi41IDUuOS0yLjV6Ii8+Cgk8cGF0aCBpZD0iMiIgY2xhc3M9InMwIiBhcmlhLWxhYmVsPSIyIiAgZD0ibTEwNi41IDEzMC45aDQuNXYxLjFoLTZ2LTEuMXEwLjctMC43IDItMiAxLjItMS4zIDEuNi0xLjcgMC42LTAuNyAwLjgtMS4yIDAuMy0wLjQgMC4zLTAuOSAwLTAuOC0wLjYtMS4yLTAuNS0wLjUtMS40LTAuNS0wLjYgMC0xLjIgMC4yLTAuNyAwLjItMS41IDAuNnYtMS4zcTAuOC0wLjMgMS41LTAuNSAwLjctMC4xIDEuMi0wLjEgMS41IDAgMi40IDAuNyAwLjkgMC44IDAuOSAyIDAgMC42LTAuMyAxLjEtMC4yIDAuNi0wLjggMS4zLTAuMSAwLjItMSAxLTAuOCAwLjktMi40IDIuNXoiLz4KPC9zdmc+"},
+ {nome:"Lupini",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjZjVhOTNjIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6ICNmZmZmZmY7c3Ryb2tlOiAjZjVhOTNjO3N0cm9rZS13aWR0aDogMyB9IAoJPC9zdHlsZT4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODggMTc2Yy00OC42NiAwLTg4LTM5LjM0LTg4LTg4IDAtNDguNjYgMzkuMzQtODggODgtODggNDguNjYgMCA4OCAzOS4zNCA4OCA4OCAwIDQ4LjY2LTM5LjM0IDg4LTg4IDg4eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczEiIGQ9Im04OCA4NGMtMTIuMTcgMC0yMi04LjA1LTIyLTE4IDAtOS45NSA5LjgzLTE4IDIyLTE4IDEyLjE3IDAgMjIgOC4wNSAyMiAxOCAwIDkuOTUtOS44MyAxOC0yMiAxOHoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMyIiBkPSJtNjggMTI2Yy0xMi4xNyAwLTIyLTguMDUtMjItMTggMC05Ljk1IDkuODMtMTggMjItMTggMTIuMTcgMCAyMiA4LjA1IDIyIDE4IDAgOS45NS05LjgzIDE4LTIyIDE4eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczIiIGQ9Im0xMTAgMTIyYy0xMi4xNyAwLTIyLTguMDUtMjItMTggMC05Ljk1IDkuODMtMTggMjItMTggMTIuMTcgMCAyMiA4LjA1IDIyIDE4IDAgOS45NS05LjgzIDE4LTIyIDE4eiIvPgo8L3N2Zz4="},
+ {nome:"Molluschi",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjMGZhODllIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJCS5zMiB7IGZpbGw6ICMwMDAwMDA7c3Ryb2tlOiAjMGZhODllO3N0cm9rZS13aWR0aDogMi41IH0gCgk8L3N0eWxlPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im04OCAxNzZjLTQ4LjY2IDAtODgtMzkuMzQtODgtODggMC00OC42NiAzOS4zNC04OCA4OC04OCA0OC42NiAwIDg4IDM5LjM0IDg4IDg4IDAgNDguNjYtMzkuMzQgODgtODggODh6Ii8+Cgk8cGF0aCBjbGFzcz0iczEiIGQ9Im04OCAxMzRjLTMwIDAtNDYtMjYtNDQtNDggMi0yNCAyNC0zOCA0NC0zOCAyMCAwIDQyIDE0IDQ0IDM4IDIgMjItMTQgNDgtNDQgNDh6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMSIgZD0ibTc5IDEyOGgxOGMxLjY2IDAgMyAxLjM0IDMgM3Y2YzAgMS42Ni0xLjM0IDMtMyAzaC0xOGMtMS42NiAwLTMtMS4zNC0zLTN2LTZjMC0xLjY2IDEuMzQtMyAzLTN6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTg4IDEzMGwtMzYtNzYiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMyIiBkPSJtODggMTMwbC0xOC03NiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczIiIGQ9Im04OCAxMzB2LTc2Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMiIgZD0ibTg4IDEzMGwxOC03NiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczIiIGQ9Im04OCAxMzBsMzYtNzYiLz4KPC9zdmc+"},
+ {nome:"Funghi",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjOGI1ZTM0IH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJPC9zdHlsZT4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODggMTc2Yy00OC42NiAwLTg4LTM5LjM0LTg4LTg4IDAtNDguNjYgMzkuMzQtODggODgtODggNDguNjYgMCA4OCAzOS4zNCA4OCA4OCAwIDQ4LjY2LTM5LjM0IDg4LTg4IDg4eiIvPgoJPHBhdGggY2xhc3M9InMxIiBkPSJtNDQgODhjMi0yOCAyNC00MCA0NC00MCAyMCAwIDQyIDEyIDQ0IDQwcS00NC04LTg4IDB6Ii8+Cgk8cGF0aCBjbGFzcz0iczEiIGQ9Im03NiA5MGgyNGMwIDE4IDEwIDM0IDQgNDItNiA4LTI2IDgtMzIgMC02LTggNC0yNCA0LTQyeiIvPgo8L3N2Zz4="},
+ {nome:"Mais",alias:[],svg:"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE3NiAxNzYiIHdpZHRoPSIxNzYiIGhlaWdodD0iMTc2Ij4KCTxzdHlsZT4KCQkuczAgeyBmaWxsOiAjZjRjNjFmIH0gCgkJLnMxIHsgZmlsbDogI2ZmZmZmZiB9IAoJPC9zdHlsZT4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODggMTc2Yy00OC42NiAwLTg4LTM5LjM0LTg4LTg4IDAtNDguNjYgMzkuMzQtODggODgtODggNDguNjYgMCA4OCAzOS4zNCA4OCA4OCAwIDQ4LjY2LTM5LjM0IDg4LTg4IDg4eiIvPgoJPHBhdGggY2xhc3M9InMxIiBkPSJtNzYgNTJjMC0xMiAyNC0xMiAyNCAwdjYwYzAgOC0yNCA4LTI0IDB6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTc5LjUgNTBoM2MwLjgzIDAgMS41IDAuNjcgMS41IDEuNXYzYzAgMC44My0wLjY3IDEuNS0xLjUgMS41aC0zYy0wLjgzIDAtMS41LTAuNjctMS41LTEuNXYtM2MwLTAuODMgMC42Ny0xLjUgMS41LTEuNXoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODYuNSA1MGgzYzAuODMgMCAxLjUgMC42NyAxLjUgMS41djNjMCAwLjgzLTAuNjcgMS41LTEuNSAxLjVoLTNjLTAuODMgMC0xLjUtMC42Ny0xLjUtMS41di0zYzAtMC44MyAwLjY3LTEuNSAxLjUtMS41eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im05My41IDUwaDNjMC44MyAwIDEuNSAwLjY3IDEuNSAxLjV2M2MwIDAuODMtMC42NyAxLjUtMS41IDEuNWgtM2MtMC44MyAwLTEuNS0wLjY3LTEuNS0xLjV2LTNjMC0wLjgzIDAuNjctMS41IDEuNS0xLjV6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTc5LjUgNTloM2MwLjgzIDAgMS41IDAuNjcgMS41IDEuNXYzYzAgMC44My0wLjY3IDEuNS0xLjUgMS41aC0zYy0wLjgzIDAtMS41LTAuNjctMS41LTEuNXYtM2MwLTAuODMgMC42Ny0xLjUgMS41LTEuNXoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODYuNSA1OWgzYzAuODMgMCAxLjUgMC42NyAxLjUgMS41djNjMCAwLjgzLTAuNjcgMS41LTEuNSAxLjVoLTNjLTAuODMgMC0xLjUtMC42Ny0xLjUtMS41di0zYzAtMC44MyAwLjY3LTEuNSAxLjUtMS41eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im05My41IDU5aDNjMC44MyAwIDEuNSAwLjY3IDEuNSAxLjV2M2MwIDAuODMtMC42NyAxLjUtMS41IDEuNWgtM2MtMC44MyAwLTEuNS0wLjY3LTEuNS0xLjV2LTNjMC0wLjgzIDAuNjctMS41IDEuNS0xLjV6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTc5LjUgNjhoM2MwLjgzIDAgMS41IDAuNjcgMS41IDEuNXYzYzAgMC44My0wLjY3IDEuNS0xLjUgMS41aC0zYy0wLjgzIDAtMS41LTAuNjctMS41LTEuNXYtM2MwLTAuODMgMC42Ny0xLjUgMS41LTEuNXoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODYuNSA2OGgzYzAuODMgMCAxLjUgMC42NyAxLjUgMS41djNjMCAwLjgzLTAuNjcgMS41LTEuNSAxLjVoLTNjLTAuODMgMC0xLjUtMC42Ny0xLjUtMS41di0zYzAtMC44MyAwLjY3LTEuNSAxLjUtMS41eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im05My41IDY4aDNjMC44MyAwIDEuNSAwLjY3IDEuNSAxLjV2M2MwIDAuODMtMC42NyAxLjUtMS41IDEuNWgtM2MtMC44MyAwLTEuNS0wLjY3LTEuNS0xLjV2LTNjMC0wLjgzIDAuNjctMS41IDEuNS0xLjV6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTc5LjUgNzdoM2MwLjgzIDAgMS41IDAuNjcgMS41IDEuNXYzYzAgMC44My0wLjY3IDEuNS0xLjUgMS41aC0zYy0wLjgzIDAtMS41LTAuNjctMS41LTEuNXYtM2MwLTAuODMgMC42Ny0xLjUgMS41LTEuNXoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODYuNSA3N2gzYzAuODMgMCAxLjUgMC42NyAxLjUgMS41djNjMCAwLjgzLTAuNjcgMS41LTEuNSAxLjVoLTNjLTAuODMgMC0xLjUtMC42Ny0xLjUtMS41di0zYzAtMC44MyAwLjY3LTEuNSAxLjUtMS41eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im05My41IDc3aDNjMC44MyAwIDEuNSAwLjY3IDEuNSAxLjV2M2MwIDAuODMtMC42NyAxLjUtMS41IDEuNWgtM2MtMC44MyAwLTEuNS0wLjY3LTEuNS0xLjV2LTNjMC0wLjgzIDAuNjctMS41IDEuNS0xLjV6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTc5LjUgODZoM2MwLjgzIDAgMS41IDAuNjcgMS41IDEuNXYzYzAgMC44My0wLjY3IDEuNS0xLjUgMS41aC0zYy0wLjgzIDAtMS41LTAuNjctMS41LTEuNXYtM2MwLTAuODMgMC42Ny0xLjUgMS41LTEuNXoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODYuNSA4NmgzYzAuODMgMCAxLjUgMC42NyAxLjUgMS41djNjMCAwLjgzLTAuNjcgMS41LTEuNSAxLjVoLTNjLTAuODMgMC0xLjUtMC42Ny0xLjUtMS41di0zYzAtMC44MyAwLjY3LTEuNSAxLjUtMS41eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im05My41IDg2aDNjMC44MyAwIDEuNSAwLjY3IDEuNSAxLjV2M2MwIDAuODMtMC42NyAxLjUtMS41IDEuNWgtM2MtMC44MyAwLTEuNS0wLjY3LTEuNS0xLjV2LTNjMC0wLjgzIDAuNjctMS41IDEuNS0xLjV6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTc5LjUgOTVoM2MwLjgzIDAgMS41IDAuNjcgMS41IDEuNXYzYzAgMC44My0wLjY3IDEuNS0xLjUgMS41aC0zYy0wLjgzIDAtMS41LTAuNjctMS41LTEuNXYtM2MwLTAuODMgMC42Ny0xLjUgMS41LTEuNXoiLz4KCTxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xhc3M9InMwIiBkPSJtODYuNSA5NWgzYzAuODMgMCAxLjUgMC42NyAxLjUgMS41djNjMCAwLjgzLTAuNjcgMS41LTEuNSAxLjVoLTNjLTAuODMgMC0xLjUtMC42Ny0xLjUtMS41di0zYzAtMC44MyAwLjY3LTEuNSAxLjUtMS41eiIvPgoJPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGFzcz0iczAiIGQ9Im05My41IDk1aDNjMC44MyAwIDEuNSAwLjY3IDEuNSAxLjV2M2MwIDAuODMtMC42NyAxLjUtMS41IDEuNWgtM2MtMC44MyAwLTEuNS0wLjY3LTEuNS0xLjV2LTNjMC0wLjgzIDAuNjctMS41IDEuNS0xLjV6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTc5LjUgMTA0aDNjMC44MyAwIDEuNSAwLjY3IDEuNSAxLjV2M2MwIDAuODMtMC42NyAxLjUtMS41IDEuNWgtM2MtMC44MyAwLTEuNS0wLjY3LTEuNS0xLjV2LTNjMC0wLjgzIDAuNjctMS41IDEuNS0xLjV6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTg2LjUgMTA0aDNjMC44MyAwIDEuNSAwLjY3IDEuNSAxLjV2M2MwIDAuODMtMC42NyAxLjUtMS41IDEuNWgtM2MtMC44MyAwLTEuNS0wLjY3LTEuNS0xLjV2LTNjMC0wLjgzIDAuNjctMS41IDEuNS0xLjV6Ii8+Cgk8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsYXNzPSJzMCIgZD0ibTkzLjUgMTA0aDNjMC44MyAwIDEuNSAwLjY3IDEuNSAxLjV2M2MwIDAuODMtMC42NyAxLjUtMS41IDEuNWgtM2MtMC44MyAwLTEuNS0wLjY3LTEuNS0xLjV2LTNjMC0wLjgzIDAuNjctMS41IDEuNS0xLjV6Ii8+Cgk8cGF0aCBjbGFzcz0iczEiIGQ9Im04OCAxMzhjLTIwLTEwLTMwLTMwLTI4LTUyIDEwIDE0IDE4IDI4IDI4IDUyem0wIDBjMjAtMTAgMzAtMzAgMjgtNTItMTAgMTQtMTggMjgtMjggNTJ6Ii8+Cjwvc3ZnPg=="}
+];
+function normAl(t){return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ").trim()}
+function findAl(t){var n=normAl(t);for(var i=0;i<ALLERGENI.length;i++){var a=ALLERGENI[i];if(normAl(a.nome)===n||a.alias.some(function(x){return normAl(x)===n}))return a}return null}
+function esc(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function allHtml(str,cls){
+  var items=str.split(/[,;]/).map(function(x){return x.trim()}).filter(Boolean);
+  return '<div class="'+(cls||'algrid')+'">'+items.map(function(x){var a=findAl(x);
+    return a?(cls==='alrow'?'<div class="alitem"><img src="'+a.svg+'" alt="'+a.nome+'" title="'+a.nome+'" width="64" height="64"></div>'
+                          :'<div class="alitem"><img src="'+a.svg+'" alt="" width="64" height="64"><span>'+a.nome+'</span></div>')
+            :'<div class="alitem"><span>'+esc(x)+'</span></div>'}).join("")+'</div>';
+}
+</script>
+<script>
 /* ============ CONFIGURAZIONE (modifica qui) ============ */
 var ORDINI_APERTI = true;      // metti false per chiudere gli ordini online
 var WHATSAPP = "";             // es. "393331234567" (prefisso senza +). Vuoto = pulsante nascosto
 /* ======================================================== */
 
 var MENU = [
- ["Antipasti","Bagna","Bagna cauda con sedano",2.5,""],
- ["Antipasti","Ins.Sedano","Insalata di sedano",4],
- ["Antipasti","Sedano.Gorg","Sedano con gorgonzola",3],
+ /* Formato: [categoria, id, nome, prezzo, nota, allergeni]
+    Allergeni (6° campo): scrivi i nomi separati da virgola, es. "Latte, Uova, Cereali"
+    Nomi validi: Cereali, Crostacei, Uova, Pesce, Arachidi, Soia, Latte, Frutta a guscio, Sedano,
+    Senape, Semi di sesamo, Anidride solforosa e solfiti, Lupini, Molluschi (+ Funghi, Mais)
+    Se non c'e' una nota, metti "" al 5° posto, es. ["Dolci","Torta","Torta",4,"","Latte, Uova"] */
+ ["Antipasti","Bagna","Bagna cauda con sedano",2.5,"","Pesce, Sedano, Latte"],
+ ["Antipasti","Ins.Sedano","Insalata di sedano",4,"","Sedano"],
+ ["Antipasti","Sedano.Gorg","Sedano con gorgonzola",3,"","Sedano, Latte"],
  ["Antipasti","Lingua.Bagn","Lingua con bagnèt verd",5],
- ["Primi piatti","Agn.Sugo","Agnolotti piemontesi con sugo di stufato",8],
- ["Primi piatti","Agno.Burro","Agnolotti burro e salvia",7],
+ ["Primi piatti","Agn.Sugo","Agnolotti piemontesi con sugo di stufato",8,"","Cereali, Uova, Latte, Sedano"],
+ ["Primi piatti","Agno.Burro","Agnolotti burro e salvia",7,"","Cereali, Uova, Latte"],
  ["Secondi piatti","Salamini","Salamini alla griglia (n.2)",6],
  ["Secondi piatti","Coppa","Coppa grigliata",5],
  ["Secondi piatti","Grigliata","Grigliata mista",9,"2 salamini + coppa"],
  ["Secondi piatti","Bollito","Bollito misto con bagnèt verd",12],
- ["Secondi piatti","Pol.Gorg.","Polenta con gorgonzola",5],
+ ["Secondi piatti","Pol.Gorg.","Polenta con gorgonzola",5,"","Latte"],
  ["Secondi piatti","Pol.Brasato","Polenta con brasato",8],
- ["Contorni","Bagnetto","Bagnèt verd",2],
- ["Contorni","Mostarda","Mostarda di Voghera",2],
+ ["Contorni","Bagnetto","Bagnèt verd",2,"","Pesce, Sedano"],
+ ["Contorni","Mostarda","Mostarda di Voghera",2,"","Senape, Anidride solforosa e solfiti"],
  ["Contorni","Patatine","Patatine fritte",3.5],
- ["Dolci","Torta","Torta campagnola",4,"Mela e amaretto oppure yogurt con gocce di cioccolato (fino a esaurimento scorte)"],
- ["Dolci","Gelato","Gelato (80 g)",2.5,"Gusti: tiramisù, affogato al cioccolato, affogato al caffè, spagnola, fior di latte e caramello salato","Latticini, mandorle"],
+ ["Dolci","Torta","Torta campagnola",4,"Scegli il gusto (fino a esaurimento scorte)"],
+ ["Dolci","Gelato","Gelato (80 g)",2.5,"Scegli il gusto"],
  ["Dolci","Sorbetto","Sorbetto",2.5,"Gusto limone"],
  ["Bevande","Bibita","Bibite",2.5],
  ["Bevande","Acqua","Acqua ½L",1],
@@ -1371,9 +1434,35 @@ var MENU = [
  ["Bevande","1L Vino","Vino sfuso b/r 1L",7],
  ["Bevande","Vino Bott.","Vino in bottiglia",8,"Bonarda, Barbera, vino bianco frizzante"],
  ["Bevande","Timorasso","Timorasso",12],
- ["Bevande","Birra","Birra alla spina",5],
+ ["Bevande","Birra","Birra alla spina",5,"","Cereali"],
  ["Coperto","Coperto","Coperto",1.5]
 ].map(function(m){return{cat:m[0],id:m[1],name:m[2],price:m[3],note:m[4],all:m[5]}});
+/* ---- GUSTI DEL GELATO ----
+   GUSTI_DI = id del piatto del MENU che apre la scelta del gusto (qui "Gelato").
+   Ogni gusto: [id, nome, allergeni, immagine]
+   - id: codice breve che finisce nel QR per la cassa. Deve essere unico, senza spazi, virgole o "|".
+   - allergeni: come nel menu, es. "Latte, Uova" (anche "" se nessuno)
+   - immagine: percorso, es. "img/gusti/tiramisu.jpg". Se lasci "" cerca img/<nome-gusto>.jpg
+     (es. img/tiramisu.jpg, img/affogato-al-cioccolato.jpg); se il file non c'e' compare la lettera iniziale.
+   Il prezzo di ogni gusto e' quello del piatto "Gelato". Per togliere un gusto basta cancellarne la riga. */
+var GUSTI_DI = "Gelato";
+var GUSTI = [
+ ["Gel.Tiramisu","Tiramisù","Latte, Uova, Cereali",""],
+ ["Gel.AffCioc","Affogato al cioccolato","Latte, Frutta a guscio",""],
+ ["Gel.AffCaffe","Affogato al caffè","Latte",""],
+ ["Gel.Spagnola","Spagnola","Latte",""],
+ ["Gel.FiorLatte","Fior di latte","Latte",""],
+ ["Gel.CaramSal","Caramello salato","Latte",""]
+].map(function(g){return{id:g[0],name:g[1],all:g[2],img:g[3],di:GUSTI_DI}});
+/* ---- GUSTI DELLA TORTA ----  (stesso formato dei gusti del gelato)
+   GUSTI_TORTA_DI = id del piatto del MENU che apre la scelta del gusto (qui "Torta").
+   Il prezzo di ogni gusto e' quello del piatto "Torta". Immagine: se "" cerca img/<nome-gusto>.jpg */
+var GUSTI_TORTA_DI = "Torta";
+var GUSTI_TORTA = [
+ ["Torta.Mela","Mele e amaretto","Cereali, Uova, Latte, Frutta a guscio",""],
+ ["Torta.Yogurt","Yogurt con gocce di cioccolato","Cereali, Uova, Latte",""]
+].map(function(g){return{id:g[0],name:g[1],all:g[2],img:g[3],di:GUSTI_TORTA_DI}});
+function grp(id){return id===GUSTI_DI?GUSTI:id===GUSTI_TORTA_DI?GUSTI_TORTA:null}
 var CATS = MENU.filter(function(m){return m.id!=="Coperto"}).map(function(m){return m.cat}).filter(function(c,i,a){return a.indexOf(c)===i});
 var $ = function(id){return document.getElementById(id)};
 function slug(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
@@ -1390,7 +1479,11 @@ function phInner(m){return ICONS[m.id]||m.name.charAt(0)+'<img src="img/'+slug(m
 var eur = function(n){return n.toLocaleString("it-IT",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2})+"€"};
 var covers = 0, cart = {}, active = "Tutti", last = null;
 
-function byId(id){return MENU.filter(function(m){return m.id===id})[0]}
+function byId(id){
+  var r=MENU.filter(function(m){return m.id===id})[0]; if(r)return r;
+  var g=GUSTI.concat(GUSTI_TORTA).filter(function(x){return x.id===id})[0]; if(!g)return undefined;
+  var b=byId(g.di); return{cat:b.cat,id:g.id,name:b.name+" – "+g.name,price:b.price,all:g.all};
+}
 function setQty(id,n){ if(n<=0) delete cart[id]; else cart[id]=Math.min(99,n); render(); }
 function total(){var t=covers*byId("Coperto").price;for(var id in cart)t+=byId(id).price*cart[id];return Math.round(t*100)/100}
 function count(){var c=0;for(var id in cart)c+=cart[id];return c}
@@ -1401,11 +1494,11 @@ function render(){
   $("nav").innerHTML=["Tutti"].concat(CATS).map(function(c){return '<button data-cat="'+c+'"'+(c===active?' class="on"':'')+'>'+c+'</button>'}).join("");
   MENU.forEach(function(m){
     if(m.id==="Coperto")return;
-    if((active!=="Tutti"&&m.cat!==active)||m.name.toLocaleLowerCase("it").indexOf(term)<0)return;
+    if((active!=="Tutti"&&m.cat!==active)||(m.name+" "+(grp(m.id)||[]).map(function(g){return g.name}).join(" ")).toLocaleLowerCase("it").indexOf(term)<0)return;
     if(m.cat!==lastCat){html+='<h3 class="cat display">'+m.cat+'</h3>';lastCat=m.cat}
-    var n=cart[m.id]||0;
-    html+='<article class="'+(n?'sel':'')+'">'+(m.cat!=="Bevande"?'<button class="info-btn" data-info="'+m.id+'" aria-label="Allergeni: '+m.name+'">i</button>':'')+'<div class="ph display">'+phInner(m)+'</div><div class="body"><div><h4>'+m.name+'</h4>'+(m.note?'<p class="note">'+m.note+'</p>':'')+'</div><div class="row"><span class="price">'+eur(m.price)+'</span>'+
-      (!ORDINI_APERTI?'':n?qtyHtml(m.id,n):'<button class="add" data-id="'+m.id+'" data-d="1">Aggiungi</button>')+'</div></div></article>';
+    var isG=!!grp(m.id), n=isG?gCount(m.id):(cart[m.id]||0);
+    html+='<article class="'+(n?'sel':'')+'">'+(m.cat!=="Bevande"&&!isG?'<button class="info-btn" data-info="'+m.id+'" aria-label="Allergeni: '+m.name+'">i</button>':'')+'<div class="ph display">'+phInner(m)+'</div><div class="body"><div><h4>'+m.name+'</h4>'+(m.note?'<p class="note">'+m.note+'</p>':'')+(m.all?allHtml(m.all,'alrow'):'')+'</div><div class="row"><span class="price">'+eur(m.price)+'</span>'+
+      (isG?'<button class="add" data-gusti="'+m.id+'">'+(!ORDINI_APERTI?'Vedi gusti':n?'Gusti ('+n+')':'Scegli gusto')+'</button>':!ORDINI_APERTI?'':n?qtyHtml(m.id,n):'<button class="add" data-id="'+m.id+'" data-d="1">Aggiungi</button>')+'</div></div></article>';
   });
   $("grid").innerHTML=html||'<p class="mut">Nessun piatto trovato.</p>';
   (function(){var g=$("grid").children,run=[];function fin(){if(run.length%2===1)run[run.length-1].classList.add("solo");run=[]}
@@ -1424,18 +1517,35 @@ function render(){
     return '<li><div><b style="text-transform:uppercase">'+m.name+'</b><small>'+n+' × '+eur(m.price)+'</small></div>'+qtyHtml(id,n)+'</li>'}).join("");
 }
 
+function gCount(di){var c=0;(grp(di)||[]).forEach(function(g){c+=cart[g.id]||0});return c}
+function gPh(g){return g.name.charAt(0)+'<img src="'+(g.img||'img/'+slug(g.name)+'.jpg')+'" alt="" loading="lazy" onerror="this.remove()">'}
+function gustiList(di){
+  var base=byId(di);
+  $("gt").textContent=base.name;
+  $("glbl").textContent="Scegli il gusto · "+eur(base.price)+" a porzione";
+  $("glist").innerHTML=grp(di).map(function(g){var n=cart[g.id]||0;
+    return '<div class="grow'+(n?' sel':'')+'"><div class="ph display">'+gPh(g)+'</div><div class="gb"><div><h4>'+g.name+'</h4>'+(g.all?allHtml(g.all,'alrow'):'')+'</div>'+
+      (ORDINI_APERTI?'<div class="row gr">'+(n?qtyHtml(g.id,n):'<button class="add" data-id="'+g.id+'" data-d="1">Aggiungi</button>')+'</div>':'')+'</div></div>'}).join("");
+}
+var gOpen=null;
+function openGusti(di){gOpen=di;gustiList(di);$("gmodal").classList.add("on")}
+var __render=render;render=function(){__render();if($("gmodal").classList.contains("on"))gustiList(gOpen)};
+
 document.addEventListener("click",function(e){
   var b=e.target.closest("button"); if(!b)return;
+  if(b.dataset.gusti){openGusti(b.dataset.gusti);return}
+  if(b.dataset.gclose){$("gmodal").classList.remove("on");return}
   if(b.dataset.gocov){$("covbox").scrollIntoView({behavior:"smooth",block:"center"});return}
   if(b.dataset.cov){covers=Math.max(0,Math.min(99,covers+Number(b.dataset.cov)));render();return}
-  if(b.dataset.info){var d=byId(b.dataset.info);$("mt").textContent=d.name;$("mal").textContent=d.all||"Non ancora indicati: chiedi al personale";$("modal").classList.add("on");return}
+  if(b.dataset.info){var d=byId(b.dataset.info);$("mt").textContent=d.name;$("mal").innerHTML=d.all?allHtml(d.all):"Non ancora indicati: chiedi al personale";$("modal").classList.add("on");return}
   if(b.dataset.close){$("modal").classList.remove("on");return}
   if(b.dataset.cat){active=b.dataset.cat;render()}
   else if(b.dataset.id){setQty(b.dataset.id,(cart[b.dataset.id]||0)+Number(b.dataset.d))}
 });
 $("q").addEventListener("input",render);
 $("modal").addEventListener("click",function(e){if(e.target===this)this.classList.remove("on")});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")$("modal").classList.remove("on")});
+$("gmodal").addEventListener("click",function(e){if(e.target===this)this.classList.remove("on")});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){$("modal").classList.remove("on");$("gmodal").classList.remove("on")}});
 
 $("go").onclick=function(){
   var id="SD"+Date.now().toString(36).toUpperCase().slice(-5)+Math.random().toString(36).slice(2,5).toUpperCase();
