@@ -77,8 +77,9 @@ article.sel{border-color:var(--pri)}
 .ph{width:5rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--acc);color:var(--pri);opacity:.9;font-size:2.4rem}
 .ph{position:relative;overflow:hidden}
 .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.ph svg{width:3.4rem;height:3.4rem}
-.ph svg.w{width:4.5rem;height:3.4rem}
+/* icone bevande: occupano gran parte del riquadro (si adattano alla sua larghezza) */
+.ph svg{width:82%;height:auto;aspect-ratio:1/1;display:block}
+.ph svg.w{width:94%;height:auto;aspect-ratio:64/48}
 .body{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:.5rem;padding:.75rem}
 h4{margin:0;padding-right:1.9rem;font-size:1.2rem;text-transform:uppercase;line-height:1.1;color:var(--pri)}
 .note{font-size:.95rem;color:var(--mut);margin:.2rem 0 0}
