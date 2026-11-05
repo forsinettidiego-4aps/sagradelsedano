@@ -1495,7 +1495,7 @@ var ICONS={
    1) img/<sottocartella>/<nome-piatto>.jpg   (sottocartella in base alla categoria, vedi SUBDIR)
    2) img/<nome-piatto>.jpg                   (cartella generale)
    Se nessun file esiste, resta la lettera iniziale. */
-var SUBDIR={"Antipasti":"antipasti","Primi piatti":"primi","Secondi piatti":"secondi","Dolci":"dolci"};
+var SUBDIR={"Antipasti":"Antipasti","Primi piatti":"Primi","Secondi piatti":"Secondi","Contorni":"Contorni","Dolci":"Dolci","Bevande":"Bevande"};
 function imgNext(el){var a=el.getAttribute("data-alt");if(!a){el.remove();return}var p=a.split("|");el.setAttribute("data-alt",p.slice(1).join("|"));el.src=p[0]}
 function imgTag(cat,name,explicit){
   var s=slug(name),sub=SUBDIR[cat],l=[];
