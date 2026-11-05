@@ -1546,15 +1546,24 @@ function render(){
     return '<li><div><b style="text-transform:uppercase">'+m.name+'</b><small>'+n+' × '+eur(m.price)+'</small></div>'+qtyHtml(id,n)+'</li>'}).join("");
 }
 
-function gCount(di){var c=0;(grp(di)||[]).forEach(function(g){c+=cart[g.id]||0});return c}
+/* I gusti sono solo una vetrina: "Aggiungi" mette nell'ordine il piatto base (es. Gelato 80 g, Torta campagnola), senza il gusto */
+function gCount(di){return cart[di]||0}
+/* gsel = quanto e' stato aggiunto da ogni gusto (solo per mostrare -, numero, + sulla riga); nell'ordine finisce comunque solo il piatto base */
+var gsel={};
+function gqtyHtml(gid,base,n){return '<div class="qty"><button data-gid="'+gid+'" data-base="'+base+'" data-d="-1" aria-label="Rimuovi uno">\u2212</button><b>'+n+'</b><button data-gid="'+gid+'" data-base="'+base+'" data-d="1" aria-label="Aggiungi uno">+</button></div>'}
+function gSync(){[[GUSTI_DI,GUSTI],[GUSTI_TORTA_DI,GUSTI_TORTA]].forEach(function(p){
+  var tot=cart[p[0]]||0,sum=0;p[1].forEach(function(g){sum+=gsel[g.id]||0});
+  for(var i=p[1].length-1;sum>tot&&i>=0;i--){var g=p[1][i],v=gsel[g.id]||0,r=Math.min(v,sum-tot);gsel[g.id]=v-r;sum-=r}
+})}
 function gPh(g){return g.name.charAt(0)+imgTag(byId(g.di).cat,g.name,g.img)}
 function gustiList(di){
   var base=byId(di);
   $("gt").textContent=base.name;
-  $("glbl").textContent="Scegli il gusto · "+eur(base.price)+" a porzione";
-  $("glist").innerHTML=grp(di).map(function(g){var n=cart[g.id]||0;
+  var tot=cart[di]||0;
+  $("glbl").textContent="Gusti disponibili · "+eur(base.price)+" a porzione"+(tot?" · nell'ordine: "+tot:"");
+  $("glist").innerHTML=grp(di).map(function(g){var n=gsel[g.id]||0;
     return '<div class="grow'+(n?' sel':'')+'"><div class="ph display">'+gPh(g)+'</div><div class="gb"><div><h4>'+g.name+'</h4>'+allHtml(g.all||'','alrow')+'</div>'+
-      (ORDINI_APERTI?'<div class="row gr">'+(n?qtyHtml(g.id,n):'<button class="add" data-id="'+g.id+'" data-d="1">Aggiungi</button>')+'</div>':'')+'</div></div>'}).join("");
+      (ORDINI_APERTI?'<div class="row gr">'+(n?gqtyHtml(g.id,di,n):'<button class="add" data-gid="'+g.id+'" data-base="'+di+'" data-d="1">Aggiungi</button>')+'</div>':'')+'</div></div>'}).join("");
 }
 var gOpen=null;
 function openGusti(di){gOpen=di;gustiList(di);$("gmodal").classList.add("on")}
@@ -1574,12 +1583,15 @@ function fitAl(){
     }
   });
 }
-var __render=render;render=function(){__render();if($("gmodal").classList.contains("on"))gustiList(gOpen);fitAl()};
+var __render=render;render=function(){gSync();__render();if($("gmodal").classList.contains("on"))gustiList(gOpen);fitAl()};
 var __openGusti=openGusti;openGusti=function(di){__openGusti(di);fitAl()};
 window.addEventListener('resize',fitAl);window.addEventListener('load',fitAl);
 
 document.addEventListener("click",function(e){
   var b=e.target.closest("button"); if(!b)return;
+  if(b.dataset.gid){var gid=b.dataset.gid,gb=b.dataset.base,gd=Number(b.dataset.d),cur=gsel[gid]||0;
+    if(gd<0&&cur<=0)return; if(gd>0&&(cart[gb]||0)>=99)return;
+    gsel[gid]=cur+gd; setQty(gb,(cart[gb]||0)+gd); return}
   if(b.dataset.gusti){openGusti(b.dataset.gusti);return}
   if(b.dataset.gclose){$("gmodal").classList.remove("on");return}
   if(b.dataset.gocov){$("covbox").scrollIntoView({behavior:"smooth",block:"center"});return}
