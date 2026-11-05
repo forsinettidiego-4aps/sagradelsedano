@@ -16,9 +16,9 @@ body{margin:0;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)
 .display{font-family:"Alfa Slab One",Georgia,serif;font-weight:400}
 header{position:relative;max-width:56rem;margin:0 auto;padding:2.5rem 1rem 1.5rem;text-align:center}
 .kicker{font-size:.9rem;font-weight:800;text-transform:uppercase;letter-spacing:.25em;color:var(--mut);margin:0}
-h1{font-size:clamp(2.5rem,9.8vw,6rem);line-height:.88;color:var(--pri);margin:.5rem 0 0}
+h1{font-size:clamp(2.8rem,12.5vw,7.5rem);line-height:.88;color:var(--pri);margin:.5rem 0 0}
 h1 small{font-size:.4em}
-.sub{font-size:1.8rem;color:var(--pri);margin:.5rem 0 0}
+.sub{font-size:1.35rem;color:var(--pri);margin:.5rem 0 0}
 h2.menu{font-size:2.6rem;color:var(--pri);margin:1.2rem 0 0}
 .titlewrap{position:relative;display:inline-block}
 .star{position:absolute;right:100%;top:50%;margin-right:1%;width:38%;aspect-ratio:1;container-type:inline-size;background:var(--pri);color:var(--pri-fg);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:translateY(-50%) rotate(-10deg);clip-path:polygon(50% 0%,61% 12%,75% 6%,78% 22%,94% 25%,88% 40%,100% 50%,88% 60%,94% 75%,78% 78%,75% 94%,61% 88%,50% 100%,39% 88%,25% 94%,22% 78%,6% 75%,12% 60%,0% 50%,12% 40%,6% 25%,22% 22%,25% 6%,39% 12%)}
@@ -1427,18 +1427,18 @@ var MENU = [
     Senape, Semi di sesamo, Anidride solforosa e solfiti, Lupini, Molluschi (+ Funghi, Mais)
     Se non c'e' una nota, metti "" al 5° posto, es. ["Dolci","Torta","Torta",4,"","Latte, Uova"] */
  ["Antipasti","Bagna","Bagna cauda con sedano",2.5,"","Pesce, Sedano, Latte"],
- ["Antipasti","Ins.Sedano","Insalata di sedano",4,"","Sedano, Frutta a guscio, Latte"],
+ ["Antipasti","Ins.Sedano","Insalata di sedano",4,"","Sedano"],
  ["Antipasti","Sedano.Gorg","Sedano con gorgonzola",3,"","Sedano, Latte"],
- ["Antipasti","Lingua.Bagn","Lingua con bagnèt verd",5,"","Cereali, Pesce"],
- ["Primi piatti","Agn.Sugo","Agnolotti piemontesi con sugo di stufato",8,"","Cereali, Uova, Latte"],
+ ["Antipasti","Lingua.Bagn","Lingua con bagnèt verd",5],
+ ["Primi piatti","Agn.Sugo","Agnolotti piemontesi con sugo di stufato",8,"","Cereali, Uova, Latte, Sedano"],
  ["Primi piatti","Agno.Burro","Agnolotti burro e salvia",7,"","Cereali, Uova, Latte"],
- ["Secondi piatti","Salamini","Salamini alla griglia (n.2)",6,"","Latte"],
- ["Secondi piatti","Coppa","Coppa grigliata",5,""],
+ ["Secondi piatti","Salamini","Salamini alla griglia (n.2)",6],
+ ["Secondi piatti","Coppa","Coppa grigliata",5],
  ["Secondi piatti","Grigliata","Grigliata mista",9,"2 salamini + coppa"],
- ["Secondi piatti","Bollito","Bollito misto con bagnèt verd",12,"","Sedano"],
+ ["Secondi piatti","Bollito","Bollito misto con bagnèt verd",12],
  ["Secondi piatti","Pol.Gorg.","Polenta con gorgonzola",5,"","Latte"],
- ["Secondi piatti","Pol.Brasato","Polenta con brasato",8,"","Sedano"],
- ["Contorni","Bagnetto","Bagnèt verd",2,"","Cereali, Pesce, Semi di sesamo"],
+ ["Secondi piatti","Pol.Brasato","Polenta con brasato",8],
+ ["Contorni","Bagnetto","Bagnèt verd",2,"","Pesce, Sedano"],
  ["Contorni","Mostarda","Mostarda di Voghera",2,"","Senape, Anidride solforosa e solfiti"],
  ["Contorni","Patatine","Patatine fritte",3.5],
  ["Dolci","Torta","Torta campagnola",4,"Scegli il gusto (fino a esaurimento scorte)"],
@@ -1648,6 +1648,7 @@ render();
       var H=(L+asc+desc)*k, top=base-asc-(H-(L+asc+desc))/2;
       st.style.width=st.style.height=H+'px';
       st.style.top=(top+10)+'px';
+      st.parentNode.style.marginLeft=(H*1.02)+'px';   /* tiene il gruppo stella+titolo centrato */
       st.style.transform='rotate(-10deg)';
     }catch(e){}
   }
