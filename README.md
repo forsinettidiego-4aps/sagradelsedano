@@ -233,9 +233,3 @@ Tieni gli `id` del sito e quelli del listino di cassa **identici**, e aggiornali
 - **Non c'è un backend**: il sito non riceve gli ordini, li affida al QR. Per riceverli a distanza serve una parte server, qui non prevista.
 - **Prezzi e menù sono nel codice**: per cambiarli bisogna modificare `index.html` e ripubblicare.
 - **Dipende da internet**: i font vengono caricati da Google Fonts.
-
----
-
-## 📄 Licenza
-
-Aggiungi qui la licenza che preferisci (ad esempio MIT) se vuoi che altri possano riutilizzare il progetto.
