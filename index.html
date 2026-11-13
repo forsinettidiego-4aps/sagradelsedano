@@ -1420,7 +1420,6 @@ function allHtml(str,cls){
 /* ============ CONFIGURAZIONE (modifica qui) ============ */
 var ORDINI_APERTI = true;      // metti false per chiudere gli ordini online
 var WHATSAPP = "";             // es. "393331234567" (prefisso senza +). Vuoto = pulsante nascosto
-var QR_SECRET = "CAMBIA-QUESTA-CHIAVE-2026"; // chiave per il codice di controllo del QR: la stessa deve essere impostata nel lettore della cassa
 /* ======================================================== */
 
 var MENU = [
@@ -1609,18 +1608,13 @@ $("modal").addEventListener("click",function(e){if(e.target===this)this.classLis
 $("gmodal").addEventListener("click",function(e){if(e.target===this)this.classList.remove("on")});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){$("modal").classList.remove("on");$("gmodal").classList.remove("on")}});
 
-/* Codice di controllo (FNV-1a a 32 bit, in base 36) calcolato su chiave segreta + dati dell'ordine */
-function qrCheck(str){var t=QR_SECRET+"|"+str,h=2166136261;for(var i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(36).toUpperCase()}
-
 $("go").onclick=function(){
   var id="SD"+Date.now().toString(36).toUpperCase().slice(-5)+Math.random().toString(36).slice(2,5).toUpperCase();
   if(!covers||!count())return;
   var ids=Object.keys(cart), t=total();
-  // payload compatto e solo ASCII: SD26|ORDINE|id x qta,...|controllo
-  // Il totale NON e' nel QR: la cassa lo ricalcola dal listino. Il codice di controllo
-  // (derivato da QR_SECRET) serve a scartare QR modificati a mano o inventati.
+  // payload compatto e solo ASCII: SD26|ORDINE|id x qta,...|totale
   var base="SD26|"+id+"|"+["Copertox"+covers].concat(ids.map(function(i){return i+"x"+cart[i]})).join(",");
-  var payload=base+"|"+qrCheck(base);
+  var payload=base+"|"+t.toFixed(2);
   var qr=new QRCode(-1,QRErrorCorrectLevel.M); qr.addData(payload); qr.make();
   var n=qr.getModuleCount(), s=8, quiet=4, cv=$("qr"), ctx=cv.getContext("2d");
   cv.width=cv.height=(n+quiet*2)*s;
