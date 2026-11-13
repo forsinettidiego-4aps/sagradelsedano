@@ -141,8 +141,11 @@ footer p{margin:.2rem 0}
 </header>
 <main>
   <div class="info closed" id="closed" hidden>Gli ordini online sono momentaneamente chiusi. Rivolgiti alla cassa.</div>
-  <div class="info" id="how"><b><p>Come funziona: scegli i piatti e le quantità, poi premi “Conferma ordine e genera QR” in fondo alla pagina.</p>
-	  <p>Mostra poi il codice alla cassa.</p></b></div>
+  <div class="info" id="how">
+    <p><b>Come funziona: scegli i piatti e le quantità, poi premi “Conferma ordine e genera QR” in fondo alla pagina.</b></p>
+    <p><b>Mostra poi il codice alla cassa.</b></p>
+    <p><b>Attenzione: se aggiorni o chiudi la pagina, l'ordine in corso viene annullato.</b></p>
+  </div>
   <section class="cov" id="covbox">
     <div><h2 class="display">Quanti coperti?</h2><p>Obbligatorio · Coperto <span id="covp"></span> (a persona)</p></div>
     <div class="qty" id="covqty"></div>
@@ -1416,8 +1419,9 @@ function allHtml(str,cls){
 </script>
 <script>
 /* ============ CONFIGURAZIONE (modifica qui) ============ */
-var ORDINI_APERTI = false;      // metti false per chiudere gli ordini online, true per aprire il sito
+var ORDINI_APERTI = true;      // metti false per chiudere gli ordini online
 var WHATSAPP = "";             // es. "393331234567" (prefisso senza +). Vuoto = pulsante nascosto
+var QR_SECRET = "CAMBIA-QUESTA-CHIAVE-2026"; // chiave per il codice di controllo del QR: la stessa deve essere impostata nel lettore della cassa
 /* ======================================================== */
 
 var MENU = [
@@ -1430,7 +1434,7 @@ var MENU = [
  ["Antipasti","Ins.Sedano","Insalata di sedano",4,"","Sedano"],
  ["Antipasti","Sedano.Gorg","Sedano con gorgonzola",3,"","Sedano, Latte"],
  ["Antipasti","Lingua.Bagn","Lingua con bagnèt verd",5],
- ["Primi piatti","Agn.Sugo","Agnolotti piemontesi con sugo di stufato",8,"","Cereali, Uova, Latte"],
+ ["Primi piatti","Agn.Sugo","Agnolotti piemontesi con sugo di stufato",8,"","Cereali, Uova, Latte, Sedano"],
  ["Primi piatti","Agno.Burro","Agnolotti burro e salvia",7,"","Cereali, Uova, Latte"],
  ["Secondi piatti","Salamini","Salamini alla griglia (n.2)",6],
  ["Secondi piatti","Coppa","Coppa grigliata",5],
@@ -1606,12 +1610,18 @@ $("modal").addEventListener("click",function(e){if(e.target===this)this.classLis
 $("gmodal").addEventListener("click",function(e){if(e.target===this)this.classList.remove("on")});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){$("modal").classList.remove("on");$("gmodal").classList.remove("on")}});
 
+/* Codice di controllo (FNV-1a a 32 bit, in base 36) calcolato su chiave segreta + dati dell'ordine */
+function qrCheck(str){var t=QR_SECRET+"|"+str,h=2166136261;for(var i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(36).toUpperCase()}
+
 $("go").onclick=function(){
   var id="SD"+Date.now().toString(36).toUpperCase().slice(-5)+Math.random().toString(36).slice(2,5).toUpperCase();
   if(!covers||!count())return;
   var ids=Object.keys(cart), t=total();
-  // payload compatto e solo ASCII: SD26|ORDINE|id x qta,...|totale
-  var payload="SD26|"+id+"|"+["Copertox"+covers].concat(ids.map(function(i){return i+"x"+cart[i]})).join(",")+"|"+t.toFixed(2);
+  // payload compatto e solo ASCII: SD26|ORDINE|id x qta,...|controllo
+  // Il totale NON e' nel QR: la cassa lo ricalcola dal listino. Il codice di controllo
+  // (derivato da QR_SECRET) serve a scartare QR modificati a mano o inventati.
+  var base="SD26|"+id+"|"+["Copertox"+covers].concat(ids.map(function(i){return i+"x"+cart[i]})).join(",");
+  var payload=base+"|"+qrCheck(base);
   var qr=new QRCode(-1,QRErrorCorrectLevel.M); qr.addData(payload); qr.make();
   var n=qr.getModuleCount(), s=8, quiet=4, cv=$("qr"), ctx=cv.getContext("2d");
   cv.width=cv.height=(n+quiet*2)*s;
@@ -1624,6 +1634,12 @@ $("go").onclick=function(){
   setTimeout(function(){$("res").scrollIntoView({behavior:"smooth"})},50);
 };
 $("again").onclick=function(){cart={};covers=0;$("res").style.display="none";render();window.scrollTo({top:0,behavior:"smooth"})};
+
+/* Se c'e' un ordine in corso, il browser chiede conferma prima di ricaricare o chiudere la pagina */
+window.addEventListener("beforeunload",function(e){
+  if(!covers&&!count())return;
+  e.preventDefault();e.returnValue="";
+});
 
 if(!ORDINI_APERTI){$("closed").hidden=false;$("how").hidden=true}
 render();

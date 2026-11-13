@@ -30,6 +30,7 @@ Il sito risolve un problema pratico durante la sagra: **velocizzare la presa deg
 - **Gestione coperti** e calcolo automatico del **totale** dell'ordine.
 - **Generazione del QR** direttamente nel browser, senza server e senza connessione per la parte di calcolo.
 - **Invio opzionale su WhatsApp** del riepilogo ordine.
+- **Avviso prima di ricaricare la pagina**: se c'è un ordine in corso, il browser chiede conferma perché l'ordine andrebbe perso.
 - **Chiusura ordini** con un semplice interruttore, quando non si vogliono più ricevere ordini online.
 - **Design responsive**, pensato per l'uso da smartphone.
 
@@ -74,6 +75,7 @@ Tutte le impostazioni si trovano all'interno di `index.html`, nella sezione `CON
 | Cosa | Dove | Come |
 |---|---|---|
 | Aprire/chiudere gli ordini | `ORDINI_APERTI` | `true` = aperti, `false` = chiusi (viene mostrato un avviso che rimanda alla cassa) |
+| Chiave di controllo del QR | `QR_SECRET` | Stringa a piacere, uguale a quella del lettore della cassa |
 | Numero WhatsApp | `WHATSAPP` | Numero con prefisso, senza `+` (es. `"393331234567"`). Vuoto = pulsante nascosto |
 | Piatti e prezzi | array `MENU` | Formato `[categoria, id, nome, prezzo, nota, allergeni]` |
 | Gusti del gelato | array `GUSTI` | Formato `[id, nome, allergeni, immagine]` |
@@ -95,14 +97,20 @@ Tutte le impostazioni si trovano all'interno di `index.html`, nella sezione `CON
 Il QR contiene una stringa compatta, solo ASCII, pensata per essere letta dal sistema di cassa:
 
 ```
-SD26|<ID_ORDINE>|Copertox<N>,<id_piatto>x<qta>,...|<totale>
+SD26|<ID_ORDINE>|Copertox<N>,<id_piatto>x<qta>,...|<CONTROLLO>
 ```
 
 Esempio:
 
 ```
-SD26|K3F9A2XYZ|Copertox2,Bagnax2,Agn.Sugox2,Pol.Brasatox1|35.00
+SD26|K3F9A2XYZ|Copertox2,Bagnax2,Agn.Sugox2|1KXZ4FR
 ```
+
+**Sicurezza:**
+
+- Il **totale non è nel QR**: la cassa deve ricalcolarlo dagli id dei piatti, dalle quantità e dal listino, così nessuno può abbassarlo modificando il codice.
+- L'ultimo campo è un **codice di controllo** calcolato (FNV-1a a 32 bit, in base 36, maiuscolo) sulla stringa `QR_SECRET|<tutto ciò che precede l'ultimo "|">`. Il lettore della cassa lo ricalcola con la stessa chiave e scarta i QR che non corrispondono.
+- Cambia `QR_SECRET` in `index.html` prima della sagra e impostala uguale nel lettore. Trattandosi di un sito statico, la chiave è visibile a chi legge il codice: il controllo scoraggia le manomissioni casuali, non protegge da un attaccante determinato.
 
 ---
 
