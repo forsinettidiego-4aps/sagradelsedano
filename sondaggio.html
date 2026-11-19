@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Facci sapere la tua opinione – Sagra del Sedano 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow+Condensed:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f4edda;--pri:#459254;--cat:#d04a4c;--card:#fff;--acc:oklch(.93 .05 145);--bd:oklch(.9 .03 145)}
+*{box-sizing:border-box}
+html{font-size:115%}
+body{margin:0;background:var(--bg);color:var(--pri);font:1.15rem/1.35 "Barlow Condensed","Arial Narrow",Arial,sans-serif;padding-bottom:env(safe-area-inset-bottom,0)}
+.display{font-family:"Alfa Slab One",Georgia,serif;font-weight:400}
+header{max-width:56rem;margin:0 auto;padding:2rem 1rem 1rem;text-align:center}
+.kicker{font-size:.9rem;font-weight:800;text-transform:uppercase;letter-spacing:.25em;margin:0}
+h1{font-size:clamp(2.6rem,11vw,6rem);line-height:.9;margin:.5rem 0 0}
+h1 small{font-size:.4em}
+.ed{display:inline-block;background:var(--pri);color:#fff;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:.15rem .8rem;border-radius:99px;margin-top:.8rem}
+h2.t{font-size:2.1rem;margin:1rem 0 0}
+main{max-width:44rem;margin:0 auto;padding:0 1rem 2rem}
+.info{background:oklch(.95 .03 145);border:2px solid var(--pri);border-radius:.5rem;padding:1rem;text-align:center;margin-bottom:1.2rem}
+.info p{margin:0}.info p+p{margin-top:.3rem}
+#bar{position:sticky;top:0;z-index:5;height:.55rem;background:var(--bd);margin:0 -1rem 1rem}
+#bar i{display:block;height:100%;width:0;background:var(--pri);transition:width .3s}
+.q{background:var(--card);border:2px solid var(--pri);border-radius:.5rem;padding:1rem;margin-bottom:1rem}
+.q.err{border-color:var(--cat)}
+.q h3{margin:0 0 .7rem;font-size:1.3rem;text-transform:uppercase;line-height:1.1}
+.q h3 em{color:var(--cat);font-style:normal}
+.q .hint{margin:-.4rem 0 .8rem;font-size:.95rem}
+.opts{display:grid;gap:.5rem}
+.opt{display:block;cursor:pointer}
+.opt input{position:absolute;opacity:0}
+.opt span{display:block;padding:.6rem .9rem;border:2px solid var(--bd);border-radius:.5rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+.opt input:checked+span{background:var(--pri);color:#fff;border-color:var(--pri)}
+.opt input:focus-visible+span,button:focus-visible{outline:2px solid var(--cat);outline-offset:2px}
+input[type=text],textarea{width:100%;font:inherit;padding:.7rem 1rem;border:2px solid var(--bd);border-radius:.5rem;background:#fff;color:#2c3e2f}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--pri)}
+textarea{min-height:6rem;resize:vertical}
+.hid{display:none}
+h3.cat{text-align:center;margin:1.4rem 0 .6rem;font-size:1.7rem;text-transform:uppercase;color:var(--cat)}
+.dish{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;padding:.55rem 0;border-top:1px solid var(--bd)}
+.dish b{text-transform:uppercase;font-size:1.05rem;flex:1 1 12rem;line-height:1.1}
+.sc{display:flex;gap:.35rem}
+.sc button{width:2.6rem;height:2.6rem;border-radius:50%;border:2px solid var(--pri);background:#fff;color:var(--pri);font:inherit;font-weight:800;cursor:pointer}
+.sc button.on{background:var(--pri);color:#fff}
+.sc button:active{transform:scale(.92)}
+.legend{display:flex;justify-content:space-between;font-weight:800;text-transform:uppercase;font-size:.9rem}
+.thumbs{display:flex;justify-content:space-between;gap:.3rem}
+.thumbs button{flex:1;border:2px solid var(--bd);border-radius:.5rem;background:#fff;color:var(--pri);padding:.5rem 0;font:inherit;font-weight:800;cursor:pointer}
+.thumbs button svg{display:block;margin:.2rem auto 0;width:1.8rem;height:1.8rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+.thumbs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.thumbs button.on svg{fill:#fff}
+#send{display:block;width:100%;font:inherit;font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:1.4rem;padding:.8rem;border:0;border-radius:.5rem;background:var(--pri);color:#fff;cursor:pointer}
+#send:disabled{opacity:.6}
+#msg{text-align:center;color:var(--cat);font-weight:800;margin:.6rem 0 0}
+#thanks{display:none;text-align:center;padding:2rem 1rem}
+#thanks h2{font-size:2.4rem;margin:0}
+footer{text-align:center;padding:1rem;font-size:.95rem}
+</style>
+</head>
+<body>
+<header>
+  <p class="kicker">Insieme per Alluvioni APS</p>
+  <h1 class="display">Sagra <small>del</small><br>Sedano</h1>
+  <span class="ed">46ª edizione · 2027</span>
+  <h2 class="t display">La tua opinione</h2>
+</header>
+<main>
+<div id="form">
+  <div class="info">
+    <p>Grazie per aver partecipato alla 46ª Edizione della Sagra del Sedano!</p>
+    <p>Speriamo che ti sia divertito almeno quanto noi ci siamo divertiti a organizzarla.</p>
+    <p><b>Le risposte sono anonime.</b> Ci vogliono 2 minuti.</p>
+  </div>
+  <div id="bar"><i></i></div>
+  <div id="qs"></div>
+  <input type="text" id="hp" class="hid" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <button id="send">Invia il sondaggio</button>
+  <p id="msg" role="alert"></p>
+</div>
+<div id="thanks">
+  <h2 class="display">Grazie!</h2>
+  <p>Le tue risposte ci aiuteranno a migliorare. Ci vediamo alla prossima Sagra!</p>
+  <p id="demo" class="hid" style="color:var(--cat);font-weight:800">Modalità prova: nessun indirizzo di raccolta configurato, le risposte non sono state salvate.</p>
+</div>
+</main>
+<footer>Insieme per Alluvioni APS · ass.insiemeperalluvioni@gmail.com</footer>
+<script>
+/* ===== CONFIGURAZIONE ===== */
+var ENDPOINT = ""; // incolla qui l'URL dell'app web di Google Apps Script (vedi istruzioni)
+/* ===== PIATTI (stesso elenco del menù) ===== */
+var DISHES = {
+ "Antipasti":["Bagna cauda con sedano","Insalata di sedano","Sedano con gorgonzola","Lingua con bagnèt verd"],
+ "Primi piatti":["Agnolotti piemontesi con sugo di stufato","Agnolotti burro e salvia"],
+ "Secondi piatti":["Salamini alla griglia (n.2)","Coppa grigliata","Grigliata mista","Bollito misto con bagnèt verd","Polenta con gorgonzola","Polenta con brasato"],
+ "Contorni":["Bagnèt verd","Mostarda di Voghera","Patatine fritte"],
+ "Dolci":["Torta campagnola","Gelato","Sorbetto"],
+ "Bevande":["Bibite","Vino sfuso","Vino in bottiglia","Timorasso","Birra alla spina"]
+};
+var A={}, R={}; // risposte testo/scelte, voti piatti
+var qs=document.getElementById("qs");
+function el(h){var d=document.createElement("div");d.innerHTML=h.trim();return d.firstChild}
+function radio(id,title,opts,req){
+  var q=el('<div class="q" id="q_'+id+'"><h3>'+title+(req?' <em>*</em>':'')+'</h3><div class="opts"></div></div>');
+  opts.forEach(function(o){
+    var l=el('<label class="opt"><input type="radio" name="'+id+'"><span></span></label>');
+    l.querySelector("span").textContent=o;
+    l.querySelector("input").onchange=function(){A[id]=o;q.classList.remove("err");after(id);prog()};
+    q.querySelector(".opts").appendChild(l);
+  });
+  qs.appendChild(q);return q;
+}
+function text(id,title,req,long,hidden,hint){
+  var q=el('<div class="q'+(hidden?' hid':'')+'" id="q_'+id+'"><h3>'+title+(req?' <em>*</em>':'')+'</h3>'+(hint?'<p class="hint">'+hint+'</p>':'')+(long?'<textarea></textarea>':'<input type="text">')+'</div>');
+  q.querySelector(long?"textarea":"input").oninput=function(e){A[id]=e.target.value;q.classList.remove("err");prog()};
+  qs.appendChild(q);return q;
+}
+radio("eta","Quanti anni hai?",["Meno di 25 anni","Tra i 26 e i 45 anni","Tra i 46 e i 64 anni","Over 65"],1);
+text("comune","Da quale Comune provieni?",1);
+radio("come","Come hai saputo di questa edizione?",["Amici/Parenti","Social","Volantini","Manifesti pubblicitari"],1);
+text("comuni_manifesti","In quale/i Comune li hai visti?",0,0,1,"Manifesti pubblicitari");
+function after(id){if(id==="come"){var h=A.come!=="Manifesti pubblicitari";document.getElementById("q_comuni_manifesti").classList.toggle("hid",h);if(h)A.comuni_manifesti=""}}
+/* voti piatti */
+var dq=el('<div class="q" id="q_voti"><h3>Cosa ne pensi dei piatti?</h3><p class="hint">Vota solo quelli che hai mangiato, da 1 a 5.</p><div class="legend"><span>1 = Per nulla soddisfatto</span><span>5 = Molto</span></div></div>');
+Object.keys(DISHES).forEach(function(c){
+  dq.appendChild(el('<h3 class="cat display">'+c+'</h3>'));
+  DISHES[c].forEach(function(n){
+    var row=el('<div class="dish"><b></b><div class="sc"></div></div>');
+    row.querySelector("b").textContent=n;
+    for(var i=1;i<=5;i++)(function(i){
+      var b=el('<button type="button" aria-label="'+n+': voto '+i+'">'+i+'</button>');
+      b.onclick=function(){
+        if(R[n]===i){delete R[n];b.classList.remove("on")}
+        else{R[n]=i;row.querySelectorAll("button").forEach(function(x){x.classList.remove("on")});b.classList.add("on")}
+        document.getElementById("q_motivi").classList.toggle("hid",!Object.values(R).some(function(v){return v<=2}));prog();
+      };
+      row.querySelector(".sc").appendChild(b);
+    })(i);
+    dq.appendChild(row);
+  });
+});
+qs.appendChild(dq);
+text("motivi","Cosa non ti ha soddisfatto?",0,1,1,"Hai dato 1 o 2 a qualche piatto: dicci perché, grazie!");
+/* qualità/prezzo */
+var pq=el('<div class="q" id="q_qp"><h3>Il rapporto qualità/prezzo ti ha soddisfatto?</h3><div class="legend"><span>1 = Per nulla</span><span>5 = Molto</span></div><div class="thumbs"></div></div>');
+for(var i=1;i<=5;i++)(function(i){
+  var b=el('<button type="button">'+i+'<svg viewBox="0 0 24 24"><path d="M7 11v9H3v-9zM7 11l4-8c1.5 0 2.5 1 2.5 2.5V9H20a1.5 1.5 0 0 1 1.5 1.8l-1.5 8A2 2 0 0 1 18 20.5H7"/></svg></button>');
+  b.onclick=function(){A.qp=i;pq.querySelectorAll("button").forEach(function(x){x.classList.remove("on")});b.classList.add("on");prog()};
+  pq.querySelector(".thumbs").appendChild(b);
+})(i);
+qs.appendChild(pq);
+text("commenti","Hai altri commenti sull'evento in generale?",0,1,0,"Consigli e critiche saranno ben accetti, sempre!");
+/* progresso */
+function prog(){
+  var t=["eta","comune","come"].filter(function(k){return A[k]&&String(A[k]).trim()}).length
+    +(Object.keys(R).length?1:0)+(A.qp?1:0);
+  document.querySelector("#bar i").style.width=(t/5*100)+"%";
+}
+/* invio */
+document.getElementById("send").onclick=function(){
+  var msg=document.getElementById("msg"),bad=null;
+  ["eta","comune","come"].forEach(function(k){
+    var q=document.getElementById("q_"+k),ok=A[k]&&String(A[k]).trim();
+    q.classList.toggle("err",!ok);if(!ok&&!bad)bad=q;
+  });
+  if(bad){msg.textContent="Mancano alcune risposte obbligatorie (*).";bad.scrollIntoView({behavior:"smooth",block:"center"});return}
+  if(document.getElementById("hp").value)return;
+  var d={Data:new Date().toLocaleString("it-IT"),"Età":A.eta,Comune:A.comune.trim(),"Come ci ha conosciuto":A.come,"Comuni manifesti":A.comuni_manifesti||""};
+  Object.keys(DISHES).forEach(function(c){DISHES[c].forEach(function(n){d["Voto: "+n]=R[n]||""})});
+  d["Motivi insoddisfazione"]=A.motivi||"";d["Qualità/prezzo"]=A.qp||"";d["Commenti"]=A.commenti||"";
+  var btn=this;btn.disabled=true;msg.textContent="";
+  function done(){document.getElementById("form").style.display="none";document.getElementById("thanks").style.display="block";if(!ENDPOINT)document.getElementById("demo").classList.remove("hid");window.scrollTo(0,0)}
+  if(!ENDPOINT){done();return}
+  fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(d)})
+    .then(done).catch(function(){btn.disabled=false;msg.textContent="Invio non riuscito. Controlla la connessione e riprova."});
+};
+</script>
+</body>
+</html>
