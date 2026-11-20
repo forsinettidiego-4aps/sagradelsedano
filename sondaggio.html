@@ -40,11 +40,12 @@ textarea{min-height:6rem;resize:vertical}
 .hid{display:none}
 h3.cat{text-align:center;margin:1.4rem 0 .6rem;font-size:1.7rem;text-transform:uppercase;color:var(--cat)}
 .dish{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;padding:.55rem 0;border-top:1px solid var(--bd)}
-.dish b{text-transform:uppercase;font-size:1.05rem;flex:1 1 12rem;line-height:1.1}
+.dish b{text-transform:uppercase;font-size:1.3rem;flex:1 1 12rem;line-height:1.1}
 .sc{display:flex;gap:.35rem}
 .sc button{width:2.6rem;height:2.6rem;border-radius:50%;border:2px solid var(--pri);background:#fff;color:var(--pri);font:inherit;font-weight:800;cursor:pointer}
 .sc button.on{background:var(--pri);color:#fff}
 .sc button:active{transform:scale(.92)}
+@media (max-width:640px){.dish{flex-direction:column;justify-content:center;gap:.5rem;padding:.8rem 0}.dish b{flex:none;text-align:center}.sc{justify-content:center;gap:.5rem}}
 .legend{display:flex;justify-content:space-between;font-weight:800;text-transform:uppercase;font-size:.9rem}
 .thumbs{display:flex;justify-content:space-between;gap:.3rem}
 .thumbs button{flex:1;border:2px solid var(--bd);border-radius:.5rem;background:#fff;color:var(--pri);padding:.5rem 0;font:inherit;font-weight:800;cursor:pointer}
