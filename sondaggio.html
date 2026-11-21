@@ -138,6 +138,10 @@ footer p{margin:.2rem 0}
 <script>
 /* ===== CONFIGURAZIONE ===== */
 var ENDPOINT = "https://script.google.com/macros/s/AKfycbyJZPEbhq4mdQ76ZsfoPa_3Qm58VJZ3fUJUjxoKKvxBIl5F_owB6vNzgdXKvLYGdsVsKw/exec"; // incolla qui l'URL dell'app web di Google Apps Script (vedi istruzioni)
+/* ===== AZZERAMENTO ACCESSI (per sagre di più giorni) ===== */
+var AZZERA_OGNI_GIORNO = true;  // true = ogni giorno chi ha già compilato può compilare di nuovo (e avere un nuovo caffè)
+var ORA_AZZERAMENTO = 5;        // il "nuovo giorno" inizia a quest'ora (5 = alle 05:00), così le serate che finiscono dopo mezzanotte restano nello stesso giorno
+var SESSIONE = "1";             // azzeramento manuale: cambia il valore (es. "2", "3"...) e salva il file, e tutti potranno ricompilare
 /* ===== PIATTI: letti da index.html (menu), bevande escluse. Se la lettura fallisce si usa questo elenco ===== */
 var MENU_URL = "index.html";
 var EXCLUDE = ["Bevande","Coperto"];
@@ -150,16 +154,21 @@ var DISHES = {
 };
 /* ===== UNA SOLA COMPILAZIONE PER DISPOSITIVO (memorizzata nel browser) ===== */
 var KEY="sondaggio46_compilato";
-function giaFatto(){try{if(localStorage.getItem(KEY))return true}catch(e){} return document.cookie.indexOf(KEY+"=1")>=0}
-function segnaFatto(){try{localStorage.setItem(KEY,"1")}catch(e){} document.cookie=KEY+"=1; max-age=31536000; path=/; SameSite=Lax"}
+function gettone(){ /* identifica "il turno corrente": cambia a ogni nuovo giorno e/o quando cambi SESSIONE */
+  var t=String(SESSIONE);
+  if(AZZERA_OGNI_GIORNO){var d=new Date(Date.now()-ORA_AZZERAMENTO*3600000);t+="-"+d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+  return t}
+function ckGet(k){var m=document.cookie.match(new RegExp("(?:^|; )"+k+"=([^;]*)"));return m?decodeURIComponent(m[1]):null}
+function giaFatto(){var v=null;try{v=localStorage.getItem(KEY)}catch(e){} if(v===null)v=ckGet(KEY);return v===gettone()}
+function segnaFatto(){var v=gettone();try{localStorage.setItem(KEY,v)}catch(e){} document.cookie=KEY+"="+encodeURIComponent(v)+"; max-age=31536000; path=/; SameSite=Lax"}
 if(/[?&]reset\b/.test(location.search)){try{localStorage.removeItem(KEY)}catch(e){} document.cookie=KEY+"=; max-age=0; path=/"}
 if(giaFatto()){document.getElementById("form").style.display="none";document.getElementById("already").style.display="block"}
 /* ===== BIGLIETTO "CAFFÈ IN OMAGGIO" (si convalida "tagliandolo" con il dito) ===== */
 var CK="sondaggio46_caffe";
 function cLoad(){var v=null;try{v=localStorage.getItem(CK)}catch(e){}
-  if(!v){var m=document.cookie.match(new RegExp(CK+"=([^;]+)"));if(m)v=decodeURIComponent(m[1])}
-  if(!v)return null;var p=v.split("|");return p[0]?{code:p[0],cut:+p[1]||0}:null}
-function cSave(c){var v=c.code+"|"+c.cut;try{localStorage.setItem(CK,v)}catch(e){}
+  if(!v)v=ckGet(CK);
+  if(!v)return null;var p=v.split("|");return p[0]&&p.slice(2).join("|")===gettone()?{code:p[0],cut:+p[1]||0}:null}
+function cSave(c){var v=c.code+"|"+c.cut+"|"+gettone();try{localStorage.setItem(CK,v)}catch(e){}
   document.cookie=CK+"="+encodeURIComponent(v)+"; max-age=31536000; path=/; SameSite=Lax"}
 function cClear(){try{localStorage.removeItem(CK)}catch(e){} document.cookie=CK+"=; max-age=0; path=/"}
 if(/[?&]reset\b/.test(location.search))cClear();
@@ -177,7 +186,7 @@ function renderTicket(){
   var t=new Date().toLocaleTimeString("it-IT");w.querySelectorAll(".clk").forEach(function(e){e.textContent=t});
   if(c.cut){w.classList.add("now","cut");w.querySelector(".stamp").innerHTML=stampHtml(c.cut);
     cap.textContent="Biglietto già utilizzato";hint.textContent="Convalidato il "+fmtT(c.cut)+". Non è più valido.";return}
-  hint.textContent="Attenzione: NON trascinate il dito sul biglietto, una volta convalidato non sarà più utilizzabile";
+  hint.textContent="Operatore: passa il dito da un lato all'altro lungo la linea tratteggiata per convalidare.";
   var pl=w.querySelector("polyline"),pts=[],on=false,r;
   function pos(e){return [(e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100]}
   function draw(){pl.setAttribute("points",pts.map(function(p){return p.join(",")}).join(" "))}
