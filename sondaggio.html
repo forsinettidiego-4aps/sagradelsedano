@@ -177,7 +177,7 @@ function renderTicket(){
   var t=new Date().toLocaleTimeString("it-IT");w.querySelectorAll(".clk").forEach(function(e){e.textContent=t});
   if(c.cut){w.classList.add("now","cut");w.querySelector(".stamp").innerHTML=stampHtml(c.cut);
     cap.textContent="Biglietto già utilizzato";hint.textContent="Convalidato il "+fmtT(c.cut)+". Non è più valido.";return}
-  hint.textContent="Operatore: passa il dito da un lato all'altro lungo la linea tratteggiata per convalidare.";
+  hint.textContent="Attenzione: NON trascinate il dito sul biglietto, una volta convalidato non sarà più utilizzabile";
   var pl=w.querySelector("polyline"),pts=[],on=false,r;
   function pos(e){return [(e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100]}
   function draw(){pl.setAttribute("points",pts.map(function(p){return p.join(",")}).join(" "))}
