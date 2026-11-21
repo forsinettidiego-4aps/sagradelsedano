@@ -128,7 +128,7 @@ function text(id,title,req,long,hidden,hint){
   q.querySelector(long?"textarea":"input").oninput=function(e){A[id]=e.target.value;q.classList.remove("err");prog()};
   qs.appendChild(q);return q;
 }
-radio("eta","Quanti anni hai?",["Meno di 25 anni","Tra i 26 e i 45 anni","Tra i 46 e i 64 anni","Over 65"],1);
+radio("eta","Quanti anni hai?",["Meno di 25 anni","Tra i 25 e i 45 anni","Tra i 46 e i 64 anni","Over 65"],1);
 text("comune","Da quale Comune provieni?",1);
 radio("come","Come hai saputo di questa edizione?",["Amici/Parenti","Social","Volantini","Manifesti pubblicitari"],1);
 text("comuni_manifesti","In quale/i Comune li hai visti?",0,0,1,"Manifesti pubblicitari");
