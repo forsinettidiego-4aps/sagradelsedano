@@ -186,7 +186,7 @@ function renderTicket(){
   var t=new Date().toLocaleTimeString("it-IT");w.querySelectorAll(".clk").forEach(function(e){e.textContent=t});
   if(c.cut){w.classList.add("now","cut");w.querySelector(".stamp").innerHTML=stampHtml(c.cut);
     cap.textContent="Biglietto già utilizzato";hint.textContent="Convalidato il "+fmtT(c.cut)+". Non è più valido.";return}
-  hint.textContent="Operatore: passa il dito da un lato all'altro lungo la linea tratteggiata per convalidare.";
+  hint.textContent="Attenzione: NON toccare il biglietto, la convalida renderà inutilizzabile il coupon";
   var pl=w.querySelector("polyline"),pts=[],on=false,r;
   function pos(e){return [(e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100]}
   function draw(){pl.setAttribute("points",pts.map(function(p){return p.join(",")}).join(" "))}
@@ -298,7 +298,7 @@ document.getElementById("send").onclick=function(){
   pt.textContent="Attendere..";document.getElementById("spin").classList.remove("hid");
   document.getElementById("pd").classList.add("hid");document.getElementById("pc").classList.add("hid");pop.classList.remove("hid");
   function done(){setTimeout(function(){
-    pt.textContent="Grazie! Ti aspettiamo l'anno prossimo!";document.getElementById("spin").classList.add("hid");
+    pt.textContent="Grazie!<br>Ti aspettiamo l'anno prossimo!";document.getElementById("spin").classList.add("hid");
     if(!ENDPOINT)document.getElementById("pd").classList.remove("hid");
     document.getElementById("pc").classList.remove("hid");
     if(ENDPOINT)segnaFatto();
