@@ -121,7 +121,6 @@ article .body .alrow{margin:.35rem 0 0}
 .end{margin-top:2.5rem;text-align:center;font-size:1.6rem;text-transform:uppercase;line-height:1.1;color:var(--pri)}
 .imgnote{text-align:center;font-size:1rem;font-weight:800;color:var(--pri);margin:.2rem 0 0}
 .social{text-align:center;padding:.5rem 1rem 1rem}
-body.chiuso .social{padding-top:2.5rem}
 .social p{margin:0 0 .6rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--pri)}
 .social a{display:inline-block;width:3rem;height:3rem;margin:0 .45rem;border-radius:50%;transition:transform .15s}
 .social a:hover{transform:scale(1.1)}
@@ -140,9 +139,8 @@ footer p{margin:.2rem 0}
   <p class="sub display">Alluvioni Cambiò</p>
   <h2 class="menu display">Menù</h2>
 </header>
-<div class="info closed" id="closed" style="max-width:960px;width:calc(100% - 2rem);margin:1rem auto" hidden><p>Gli ordini online sono momentaneamente chiusi.</p>
-	<p>Rivolgiti alla cassa.</p></div>
 <main>
+  <div class="info closed" id="closed" hidden>Gli ordini online sono momentaneamente chiusi. Rivolgiti alla cassa.</div>
   <div class="info" id="how">
     <p><b>Come funziona: scegli i piatti e le quantità, poi premi “Conferma ordine e genera QR” in fondo alla pagina.</b></p>
     <p><b>Mostra poi il codice alla cassa.</b></p>
@@ -169,6 +167,7 @@ footer p{margin:.2rem 0}
       <canvas id="qr" aria-label="QR dell'ordine"></canvas>
       <div id="sum"></div>
       <p class="mut" style="font-size:.95rem;margin:0">Mostra questo codice alla cassa. Il QR contiene i dati dell'ordine ma non certifica il pagamento. Consiglio: fai uno screenshot.</p>
+      <button class="big sec" id="wa" hidden>Invia anche su WhatsApp</button>
       <button class="big sec" id="again">Crea un nuovo ordine</button>
     </div>
   </section>
@@ -1419,7 +1418,8 @@ function allHtml(str,cls){
 </script>
 <script>
 /* ============ CONFIGURAZIONE (modifica qui) ============ */
-var ORDINI_APERTI = true;      // metti false per chiudere gli ordini online
+var ORDINI_APERTI = false;      // metti false per chiudere gli ordini online
+var WHATSAPP = "";             // es. "393331234567" (prefisso senza +). Vuoto = pulsante nascosto
 /* ======================================================== */
 
 var MENU = [
@@ -1484,7 +1484,6 @@ var GUSTI_TORTA = [
 function grp(id){return id===GUSTI_DI?GUSTI:id===GUSTI_TORTA_DI?GUSTI_TORTA:null}
 var CATS = MENU.filter(function(m){return m.id!=="Coperto"}).map(function(m){return m.cat}).filter(function(c,i,a){return a.indexOf(c)===i});
 var $ = function(id){return document.getElementById(id)};
-
 function slug(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
 var ICONS={
   "Bibita":"<svg viewBox='0 0 48 48' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><rect x='14' y='9' width='20' height='31' rx='3' fill='#f4f1ea'/><rect x='14' y='17' width='20' height='14' fill='#e76f51' stroke='none'/><path d='M14 14h20M14 35h20'/><path d='M20 24h8' stroke='#fff'/><path d='M20 9v-2h8v2' /></svg>",
@@ -1625,6 +1624,7 @@ $("go").onclick=function(){
   var text=covers+" × Coperto\n"+ids.map(function(i){return cart[i]+" × "+byId(i).name}).join("\n")+"\n\nTotale: "+eur(t);
   $("oid").textContent="Ordine "+id; $("sum").textContent=text;
   $("res").style.display="block";
+  if(WHATSAPP){$("wa").hidden=false;$("wa").onclick=function(){window.open("https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent("Ordine "+id+"\n"+text))}}
   setTimeout(function(){$("res").scrollIntoView({behavior:"smooth"})},50);
 };
 $("again").onclick=function(){cart={};covers=0;$("res").style.display="none";render();window.scrollTo({top:0,behavior:"smooth"})};
@@ -1635,14 +1635,8 @@ window.addEventListener("beforeunload",function(e){
   e.preventDefault();e.returnValue="";
 });
 
-/* Ordini chiusi: restano intestazione e titolo, in fondo social e piede; spariscono menù, coperti e ordine */
-if(!ORDINI_APERTI){
-  ["header .menu","main","#modal","#gmodal"].forEach(function(k){var e=document.querySelector(k); if(e)e.style.display="none"});
-  document.body.classList.add("chiuso");
-  $("closed").hidden=false;
-}else{
-  render();
-}
+if(!ORDINI_APERTI){$("closed").hidden=false;$("how").hidden=true}
+render();
 </script>
 <script>
 /* Stella: altezza = dal bordo alto della S di "Sagra" al bordo basso della S di "Sedano" */
